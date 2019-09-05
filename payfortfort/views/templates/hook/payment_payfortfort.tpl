@@ -20,7 +20,7 @@
     <span> / </span>
     <select id="payfort_fort_expiry_year">
       {foreach from=$years item=year}
-        <option value="{$year}">{$year}</option>
+        <option value="{$year|substr:2}">{$year}</option>
       {/foreach}
     </select>
   </p>
