@@ -192,6 +192,9 @@ class Payfortfort extends PaymentModule
             else {
                 Configuration::updateValue('PAYFORT_FORT_INTEGRATION_TYPE', $payfort_integration_type);
             }
+            
+            
+            
             $payfort_mada_branding = (int) Tools::getvalue('payfort_mada_branding');
             if ($payfort_mada_branding == 1) {
                 Configuration::updateValue('PAYFORT_FORT_MADA_BRANDING', 1);
@@ -199,6 +202,9 @@ class Payfortfort extends PaymentModule
             else {
                 Configuration::updateValue('PAYFORT_FORT_MADA_BRANDING', 0);
             }
+            
+            
+            
             $payfort_integration_type_installments = Tools::getvalue('payfort_integration_type_installments');
             if (empty($payfort_integration_type_installments)) {
                 Configuration::updateValue('PAYFORT_FORT_INTEGRATION_TYPE_INSTALLMENTS', 'redirection');
@@ -362,6 +368,11 @@ class Payfortfort extends PaymentModule
     }
     
     public function getCreditCardPaymentOption() {
+        $pfHelper = Payfort_Fort_Helper::getInstance();
+        $frontCurrency = $pfHelper->getFrontCurrency();
+        $baseCurrency  = $pfHelper->getBaseCurrency();
+        $fortCurrency  = $pfHelper->getFortCurrency($baseCurrency, $frontCurrency);
+        
         
         $integration_type = Configuration::get('PAYFORT_FORT_INTEGRATION_TYPE');
         
@@ -371,7 +382,10 @@ class Payfortfort extends PaymentModule
                        ->setForm($this->generateIframeForm())
                        ->setAdditionalInformation($this->fetch('module:payfortfort/views/templates/hook/payment_infos.tpl'));
         } else if($integration_type == PAYFORT_FORT_INTEGRATION_TYPE_MERCAHNT_PAGE2) {
-        $mada_branding    = Configuration::get('PAYFORT_FORT_MADA_BRANDING');            
+        $mada_branding    = Configuration::get('PAYFORT_FORT_MADA_BRANDING');
+        if ($fortCurrency != 'SAR') {
+            $mada_branding = 0;
+        }
         $creditCardOption = new PaymentOption();
             if ($mada_branding){ 
              $creditCardOption->setCallToActionText($this->l('Pay With Credit / Debit / mada Bank Card'))
