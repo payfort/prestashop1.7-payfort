@@ -192,9 +192,6 @@ class Payfortfort extends PaymentModule
             else {
                 Configuration::updateValue('PAYFORT_FORT_INTEGRATION_TYPE', $payfort_integration_type);
             }
-            
-            
-            
             $payfort_mada_branding = (int) Tools::getvalue('payfort_mada_branding');
             if ($payfort_mada_branding == 1) {
                 Configuration::updateValue('PAYFORT_FORT_MADA_BRANDING', 1);
@@ -202,9 +199,6 @@ class Payfortfort extends PaymentModule
             else {
                 Configuration::updateValue('PAYFORT_FORT_MADA_BRANDING', 0);
             }
-            
-            
-            
             $payfort_integration_type_installments = Tools::getvalue('payfort_integration_type_installments');
             if (empty($payfort_integration_type_installments)) {
                 Configuration::updateValue('PAYFORT_FORT_INTEGRATION_TYPE_INSTALLMENTS', 'redirection');
