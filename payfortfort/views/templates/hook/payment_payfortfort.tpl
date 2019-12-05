@@ -1,4 +1,14 @@
 <form action="#" id="frm_payfortfort_merchantpage2" name="frm_payfortfort_merchantpage2">
+  
+  
+  
+  <p> 
+	{if $mada_branding eq 1}
+     <img src="{$moduleDir|addslashes}payfortfort/img/mada.jpeg" alt="mada" height="26" width="45"/>	
+     {/if}
+     <img src="{$moduleDir|addslashes}payfortfort/img/visa.png" alt="mada" height="26" width="45" style="margin:0px 5px"/>
+     <img src="{$moduleDir|addslashes}payfortfort/img/mastercard.jpeg" alt="mada" height="26" width="45"/>   
+  </p>
 
   <p>
     <label>{l s='Card number'}</label>

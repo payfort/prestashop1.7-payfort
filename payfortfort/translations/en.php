@@ -2,15 +2,17 @@
 
 global $_MODULE;
 $_MODULE = array();
-$_MODULE['<{payfortfort}prestashop>payfortfort_5aadafe9e2454b88e1461bcb7aa1741f'] = 'Receive payment with Credit or Debit Card';
-$_MODULE['<{payfortfort}prestashop>payfortfort_9d5b40ff49295ac0b4a5a13a88ccd285'] = 'CURL extension must be enabled on your server to use this module.';
 $_MODULE['<{payfortfort}prestashop>payfortfort_20015706a8cbd457cbb6ea3e7d5dc9b3'] = 'Configuration updated 22222';
 $_MODULE['<{payfortfort}prestashop>payfortfort_d0521d4d32a85df0c1592c51d0d151de'] = 'Invalid card number.';
 $_MODULE['<{payfortfort}prestashop>payfortfort_d652aceebaec8dcab8942426ad41a38f'] = 'Invalid card holder name.';
 $_MODULE['<{payfortfort}prestashop>payfortfort_2b619db05ab4a56c63d7c8fefc23f928'] = 'Invalid card expiry date.';
 $_MODULE['<{payfortfort}prestashop>payfortfort_cf006d996a504350b2a4c66477be5f74'] = 'Invalid CVC Code.';
 $_MODULE['<{payfortfort}prestashop>payfortfort_17bfb78fee33c8ccca1407d31bf8c66a'] = 'Invalid credit card details, Please check you credit card details and try again.';
-$_MODULE['<{payfortfort}prestashop>payment_e2b7dec8fa4b498156dfee6e4c84b156'] = 'This payment method is not available.';
+$_MODULE['<{payfortfort}prestashop>payfortfort_ff4720b04f86c38197af35229ed367f5'] = 'Pay With Debit / Cradit Card';
+$_MODULE['<{payfortfort}prestashop>payfortfort_698e8d56979f00542dab0b8b37f73fae'] = 'Pay With Credit / Debit / mada Bank Card';
+$_MODULE['<{payfortfort}prestashop>payfortfort_f56edd64c1ffb81f9be7014cd5ec71df'] = 'Pay with Installments';
+$_MODULE['<{payfortfort}prestashop>payfortfort_166ed4659f575a51079d939d12eaf48a'] = 'Pay With SADAD';
+$_MODULE['<{payfortfort}prestashop>payfortfort_dff7224b141b1b24b299340814bfcc79'] = 'Pay with NAPS';
 $_MODULE['<{payfortfort}prestashop>order_254341cb90cc29d9b1f9e79ea9319b29'] = 'Payfort Fort update: payment failed.';
 $_MODULE['<{payfortfort}prestashop>order_cd0d96021db670fb682634ec7ff917e3'] = 'Payfort Fort update: payment canceled.';
 $_MODULE['<{payfortfort}prestashop>order_74d38152d9b545e90b048f24f11abf59'] = 'Payfort Fort update: payment complete.';
@@ -19,6 +21,7 @@ $_MODULE['<{payfortfort}prestashop>payment_0c105c527b23e77e55af1ed955d93929'] = 
 $_MODULE['<{payfortfort}prestashop>payment_a3cc307bc165ab8d95215f1a3ed06ec9'] = 'Invalid response signature.';
 $_MODULE['<{payfortfort}prestashop>payment_e7df2ee4da20e42bc57ea92c41003aab'] = 'You have canceled the payment, please try again.';
 $_MODULE['<{payfortfort}prestashop>payment_7d33101a07d6cb0b30dfae3eddc6375b'] = 'An error occurred while making the transaction. Please try again. (Error message: %s)';
+$_MODULE['<{payfortfort}prestashop>payment_e2b7dec8fa4b498156dfee6e4c84b156'] = 'This payment method is not available.';
 $_MODULE['<{payfortfort}prestashop>payment_8d55d4c66f2e77486cadfa4c376e9960'] = 'Response Unknown';
 $_MODULE['<{payfortfort}prestashop>configuration_5e0e4bb5fb2c0a0cd39fcbd5e5e1905e'] = 'Configure your Payfort FORT Payment Gateway';
 $_MODULE['<{payfortfort}prestashop>configuration_6cf441df11030d5b0c218bf3d8ab3511'] = 'Credentials for';
@@ -59,16 +62,12 @@ $_MODULE['<{payfortfort}prestashop>orderconfirmation_0db71da7150c27142eef9d22b84
 $_MODULE['<{payfortfort}prestashop>orderconfirmation_64430ad2835be8ad60c59e7d44e4b0b1'] = 'customer support';
 $_MODULE['<{payfortfort}prestashop>orderconfirmation_c5a5e5f54ebdfcd09eacf279a93abf28'] = 'Payment Failed!';
 $_MODULE['<{payfortfort}prestashop>orderconfirmation_d23f6f85e3e1d0104232acc9935736b4'] = 'Sorry, Could not complete payment for your order, please check your payment details and try again. If you think this is an error, you can contact our';
-$_MODULE['<{payfortfort}prestashop>payfortfort_ff4720b04f86c38197af35229ed367f5'] = 'Pay With Debit / Cradit Card';
 $_MODULE['<{payfortfort}prestashop>payfortfort_bd390174c8c407b44c2740b7a030a047'] = 'Card Holder Name';
 $_MODULE['<{payfortfort}prestashop>payfortfort_27033793336bf6e91407513490a248db'] = 'Card Number';
 $_MODULE['<{payfortfort}prestashop>payfortfort_cd44fa808f9916afbe0860e4a20edc7a'] = 'Expiry Date';
 $_MODULE['<{payfortfort}prestashop>payfortfort_74fb0fc2d53fe5c619b0b57e7e6fd034'] = 'CVC Code';
 $_MODULE['<{payfortfort}prestashop>payfortfort_8b23d7189f3a4440396eea5ebcd510e0'] = 'You can find the code on the back of the card.';
 $_MODULE['<{payfortfort}prestashop>payfortfort_52bab1c3ac8aff9159be10acf1d5e55e'] = 'Confirm my order';
-$_MODULE['<{payfortfort}prestashop>payfortfort_f56edd64c1ffb81f9be7014cd5ec71df'] = 'Pay with Installments';
 $_MODULE['<{payfortfort}prestashop>payfortfort_91798f420fe5f808b53348970a600278'] = 'Pay with Installments';
 $_MODULE['<{payfortfort}prestashop>payfortfort_0b458cd81b6de8da1bd575a9dd607782'] = 'Pay with SADAD';
-$_MODULE['<{payfortfort}prestashop>payfortfort_166ed4659f575a51079d939d12eaf48a'] = 'Pay With SADAD';
-$_MODULE['<{payfortfort}prestashop>payfortfort_dff7224b141b1b24b299340814bfcc79'] = 'Pay with NAPS';
 $_MODULE['<{payfortfort}prestashop>payfortfort_059551249d2cacf31a1e5284e4c35eff'] = 'Pay With NAPS';
