@@ -62,7 +62,7 @@ class Payfort_Fort_Helper extends Payfort_Fort_Super
     }
 
     /**
-     * Convert Amount with dicemal points
+     * Convert Amount with decimal points
      * @param decimal $amount
      * @param decimal $currency_value
      * @param string  $currency_code
