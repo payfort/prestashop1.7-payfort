@@ -62,7 +62,7 @@ class Payfort_Fort_Helper extends Payfort_Fort_Super
     }
 
     /**
-     * Convert Amount with decimal points
+     * Convert Amount with dicemal points
      * @param decimal $amount
      * @param decimal $currency_value
      * @param string  $currency_code
@@ -78,13 +78,15 @@ class Payfort_Fort_Helper extends Payfort_Fort_Super
             $new_amount = round($amount, $decimal_points);
         }
         else {
-//            $new_amount = round($amount, $decimal_points);
+   
             $new_amount = round($amount / $currency_value, $decimal_points);
         }
-        $new_amount = $new_amount * (pow(10, $decimal_points));
+        if($decimal_points != 0) {
+            $new_amount = $new_amount * (pow(10, $decimal_points));
+        }
         return $new_amount;
     }
-
+    
     /**
      * 
      * @param string $currency
@@ -101,13 +103,29 @@ class Payfort_Fort_Helper extends Payfort_Fort_Super
             'BHD' => 3,
             'LYD' => 3,
             'IQD' => 3,
+            'CLF' => 4,
+            'BIF' => 0,
+            'DJF' => 0,
+            'GNF' => 0, 
+            'ISK' => 0,
+            'JPY' => 0,
+            'KMF' => 0,
+            'KRW' => 0,
+            'CLP' => 0,
+            'PYG' => 0,
+            'RWF' => 0,
+            'UGX' => 0,
+            'VND' => 0,
+            'VUV' => 0,
+            'XAF' => 0,
+            'BYR' => 0,
         );
         if (isset($arrCurrencies[$currency])) {
             $decimalPoint = $arrCurrencies[$currency];
         }
         return $decimalPoint;
     }
-
+   
     /**
      * calculate fort signature
      * @param array $arrData
@@ -117,12 +135,12 @@ class Payfort_Fort_Helper extends Payfort_Fort_Super
     public function calculateSignature($arrData, $signType = 'request')
     {
         $shaString = '';
-
+      
         ksort($arrData);
         foreach ($arrData as $k => $v) {
             $shaString .= "$k=$v";
         }
-
+     
         if ($signType == 'request') {
             $shaString = $this->pfConfig->getRequestShaPhrase() . $shaString . $this->pfConfig->getRequestShaPhrase();
         }
@@ -130,10 +148,10 @@ class Payfort_Fort_Helper extends Payfort_Fort_Super
             $shaString = $this->pfConfig->getResponseShaPhrase() . $shaString . $this->pfConfig->getResponseShaPhrase();
         }
         $signature = hash($this->pfConfig->getHashAlgorithm(), $shaString);
-
+     
         return $signature;
     }
-
+  
     /**
      * Log the error on the disk
      */
@@ -147,12 +165,12 @@ class Payfort_Fort_Helper extends Payfort_Fort_Super
         $logger->setFilename($this->pfConfig->getLogFileDir());
         $logger->logError($messages);
     }
-
+ 
     public function getCustomerIp()
     {
         return Tools::getRemoteAddr();
     }
-
+    
     public function getGatewayHost()
     {
         if ($this->pfConfig->isSandboxMode()) {
@@ -160,7 +178,7 @@ class Payfort_Fort_Helper extends Payfort_Fort_Super
         }
         return $this->getGatewayProdHost();
     }
-
+    
     public function getGatewayUrl($type = 'redirection')
     {
         $testMode = $this->pfConfig->isSandboxMode();
@@ -170,15 +188,15 @@ class Payfort_Fort_Helper extends Payfort_Fort_Super
         else {
             $gatewayUrl = $testMode ? $this->pfConfig->getGatewaySandboxHost() . 'FortAPI/paymentPage' : $this->pfConfig->getGatewayProdHost() . 'FortAPI/paymentPage';
         }
-
+    
         return $gatewayUrl;
     }
-
+    
     public function setFlashMsg($message, $status = PAYFORT_FORT_FLASH_MSG_ERROR, $title = '')
     {
         return;
     }
-
+    
     public static function loadJsMessages($messages, $isReturn = true, $category = 'payfort_fort')
     {
         $result = '';
@@ -192,7 +210,7 @@ class Payfort_Fort_Helper extends Payfort_Fort_Super
             echo $result;
         }
     }
-
+    
 }
 
 ?>
