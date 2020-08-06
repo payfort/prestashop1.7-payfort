@@ -51,6 +51,12 @@
                     <option value="SHA512" {if 'SHA512' eq $PAYFORT_FORT_SHA_ALGORITHM} selected {/if}>
                         SHA-512
                     </option>
+                    <option value="HMAC512" {if 'HMAC512' eq $PAYFORT_FORT_SHA_ALGORITHM} selected {/if}>
+                        HMAC-512
+                    </option>
+                    <option value="HMAC256" {if 'HMAC256' eq $PAYFORT_FORT_SHA_ALGORITHM} selected {/if}>
+                        HMAC-256
+                    </option>
                 </select>
             </div>
             <label for="payfort_fort_language">{l s='Language' mod='payfortfort'}</label>
