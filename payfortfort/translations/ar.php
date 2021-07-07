@@ -2,15 +2,17 @@
 
 global $_MODULE;
 $_MODULE = array();
-$_MODULE['<{payfortfort}prestashop>payfortfort_5aadafe9e2454b88e1461bcb7aa1741f'] = 'قبول الدفعات عن طريق البطاقات الائتمانية';
-$_MODULE['<{payfortfort}prestashop>payfortfort_9d5b40ff49295ac0b4a5a13a88ccd285'] = 'cURL extension must be enabled on your server to use this module.';
 $_MODULE['<{payfortfort}prestashop>payfortfort_20015706a8cbd457cbb6ea3e7d5dc9b3'] = 'تم حفظ الإعدادات';
 $_MODULE['<{payfortfort}prestashop>payfortfort_d0521d4d32a85df0c1592c51d0d151de'] = 'رقم البطاقة غير صحيح';
 $_MODULE['<{payfortfort}prestashop>payfortfort_d652aceebaec8dcab8942426ad41a38f'] = 'خطأ في اسم حامل البطاقة';
 $_MODULE['<{payfortfort}prestashop>payfortfort_2b619db05ab4a56c63d7c8fefc23f928'] = 'خطأ في تاريخ الانتهاء';
 $_MODULE['<{payfortfort}prestashop>payfortfort_cf006d996a504350b2a4c66477be5f74'] = 'خطأ في رمز التحقق';
 $_MODULE['<{payfortfort}prestashop>payfortfort_17bfb78fee33c8ccca1407d31bf8c66a'] = 'معلومات البطاقة غير صحيحة , يرجى التحقق و المحاولة مره اخرى';
-$_MODULE['<{payfortfort}prestashop>payment_e2b7dec8fa4b498156dfee6e4c84b156'] = 'This payment method is not available.';
+$_MODULE['<{payfortfort}prestashop>payfortfort_ff4720b04f86c38197af35229ed367f5'] = 'الدفع بواسطة بطاقة الائتمان';
+$_MODULE['<{payfortfort}prestashop>payfortfort_698e8d56979f00542dab0b8b37f73fae'] = 'الدفع بواسطة بطاقة الائتمان / بطاقة مدى البنكية';
+$_MODULE['<{payfortfort}prestashop>payfortfort_f56edd64c1ffb81f9be7014cd5ec71df'] = 'الدفع بالتقسيط';
+$_MODULE['<{payfortfort}prestashop>payfortfort_166ed4659f575a51079d939d12eaf48a'] = 'الدفع بواسطة سداد';
+$_MODULE['<{payfortfort}prestashop>payfortfort_dff7224b141b1b24b299340814bfcc79'] = 'الدفع بواسطة نابس';
 $_MODULE['<{payfortfort}prestashop>order_254341cb90cc29d9b1f9e79ea9319b29'] = 'Payfort Fort update: payment failed.';
 $_MODULE['<{payfortfort}prestashop>order_cd0d96021db670fb682634ec7ff917e3'] = 'Payfort Fort update: payment canceled.';
 $_MODULE['<{payfortfort}prestashop>order_74d38152d9b545e90b048f24f11abf59'] = 'Payfort Fort update: payment complete.';
@@ -19,6 +21,7 @@ $_MODULE['<{payfortfort}prestashop>payment_0c105c527b23e77e55af1ed955d93929'] = 
 $_MODULE['<{payfortfort}prestashop>payment_a3cc307bc165ab8d95215f1a3ed06ec9'] = 'Invalid response signature.';
 $_MODULE['<{payfortfort}prestashop>payment_e7df2ee4da20e42bc57ea92c41003aab'] = 'You have canceled the payment, please try again.';
 $_MODULE['<{payfortfort}prestashop>payment_7d33101a07d6cb0b30dfae3eddc6375b'] = 'An error occurred while making the transaction. Please try again. (Error message: %s)';
+$_MODULE['<{payfortfort}prestashop>payment_e2b7dec8fa4b498156dfee6e4c84b156'] = 'This payment method is not available.';
 $_MODULE['<{payfortfort}prestashop>payment_8d55d4c66f2e77486cadfa4c376e9960'] = 'Response Unknown';
 $_MODULE['<{payfortfort}prestashop>configuration_5e0e4bb5fb2c0a0cd39fcbd5e5e1905e'] = 'Configure your Payfort FORT Payment Gateway';
 $_MODULE['<{payfortfort}prestashop>configuration_6cf441df11030d5b0c218bf3d8ab3511'] = 'Credentials for';
@@ -60,16 +63,12 @@ $_MODULE['<{payfortfort}prestashop>orderconfirmation_0db71da7150c27142eef9d22b84
 $_MODULE['<{payfortfort}prestashop>orderconfirmation_64430ad2835be8ad60c59e7d44e4b0b1'] = 'دعم الزبائن';
 $_MODULE['<{payfortfort}prestashop>orderconfirmation_c5a5e5f54ebdfcd09eacf279a93abf28'] = 'فشلت عملية الدفع!';
 $_MODULE['<{payfortfort}prestashop>orderconfirmation_d23f6f85e3e1d0104232acc9935736b4'] = 'نعتذر, فشلت عملية الدفع, يرجى التأكد من تفاصيل الدفع و المحاولة مرة أخرى, اذا كان لديك اسئلة يرجى التواصل مع';
-$_MODULE['<{payfortfort}prestashop>payfortfort_ff4720b04f86c38197af35229ed367f5'] = 'الدفع بواسطة بطاقة الائتمان';
 $_MODULE['<{payfortfort}prestashop>payfortfort_bd390174c8c407b44c2740b7a030a047'] = 'اسم حامل البطاقة';
 $_MODULE['<{payfortfort}prestashop>payfortfort_27033793336bf6e91407513490a248db'] = 'رقم البطاقة';
 $_MODULE['<{payfortfort}prestashop>payfortfort_cd44fa808f9916afbe0860e4a20edc7a'] = 'تاريخ الانتهاء';
 $_MODULE['<{payfortfort}prestashop>payfortfort_74fb0fc2d53fe5c619b0b57e7e6fd034'] = 'رمز التحقق';
 $_MODULE['<{payfortfort}prestashop>payfortfort_8b23d7189f3a4440396eea5ebcd510e0'] = 'رمز التحقق موجود خلف البطاقة';
 $_MODULE['<{payfortfort}prestashop>payfortfort_52bab1c3ac8aff9159be10acf1d5e55e'] = 'موافق';
-$_MODULE['<{payfortfort}prestashop>payfortfort_f56edd64c1ffb81f9be7014cd5ec71df'] = 'الدفع بالتقسيط';
 $_MODULE['<{payfortfort}prestashop>payfortfort_91798f420fe5f808b53348970a600278'] = 'الدفع بالتقسيط';
 $_MODULE['<{payfortfort}prestashop>payfortfort_0b458cd81b6de8da1bd575a9dd607782'] = 'الدفع بواسطة سداد';
-$_MODULE['<{payfortfort}prestashop>payfortfort_166ed4659f575a51079d939d12eaf48a'] = 'الدفع بواسطة سداد';
-$_MODULE['<{payfortfort}prestashop>payfortfort_dff7224b141b1b24b299340814bfcc79'] = 'الدفع بواسطة نابس';
 $_MODULE['<{payfortfort}prestashop>payfortfort_059551249d2cacf31a1e5284e4c35eff'] = 'الدفع بواسطة نابس';

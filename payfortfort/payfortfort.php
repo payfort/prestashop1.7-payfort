@@ -71,6 +71,7 @@ class Payfortfort extends PaymentModule
                 $this->registerHook('header') &&
                 $this->registerHook('backOfficeHeader') &&
                 Configuration::updateValue('PAYFORT_FORT_SANDBOX_MODE', 1) &&
+                Configuration::updateValue('PAYFORT_FORT_MADA_BRANDING', 1) &&                
                 Configuration::updateValue('PAYFORT_FORT_LANGUAGE', 'en') &&
                 Configuration::updateValue('PAYFORT_FORT_COMMAND', 'AUTHORIZATION') &&
                 Configuration::updateValue('PAYFORT_HASH_ALGORITHM', 'SHA1') &&
@@ -84,6 +85,7 @@ class Payfortfort extends PaymentModule
     public function uninstall() {
         
         Configuration::deleteByName('PAYFORT_FORT_SANDBOX_MODE');
+        Configuration::deleteByName('PAYFORT_FORT_MADA_BRANDING');        
         Configuration::deleteByName('PAYFORT_FORT_LANGUAGE');
         Configuration::deleteByName('PAYFORT_FORT_MERCHANT_IDENTIFIER');
         Configuration::deleteByName('PAYFORT_FORT_ACCESS_CODE');
@@ -191,6 +193,18 @@ class Payfortfort extends PaymentModule
                 Configuration::updateValue('PAYFORT_FORT_INTEGRATION_TYPE', $payfort_integration_type);
             }
             
+            
+            
+            $payfort_mada_branding = (int) Tools::getvalue('payfort_mada_branding');
+            if ($payfort_mada_branding == 1) {
+                Configuration::updateValue('PAYFORT_FORT_MADA_BRANDING', 1);
+            }
+            else {
+                Configuration::updateValue('PAYFORT_FORT_MADA_BRANDING', 0);
+            }
+            
+            
+            
             $payfort_integration_type_installments = Tools::getvalue('payfort_integration_type_installments');
             if (empty($payfort_integration_type_installments)) {
                 Configuration::updateValue('PAYFORT_FORT_INTEGRATION_TYPE_INSTALLMENTS', 'redirection');
@@ -253,6 +267,7 @@ class Payfortfort extends PaymentModule
             'module_dir'                                     => $this->_path,
             'order_states'                                   => $order_states,
             'PAYFORT_FORT_SANDBOX_MODE'                      => Configuration::get('PAYFORT_FORT_SANDBOX_MODE'),
+            'PAYFORT_FORT_MADA_BRANDING'                     => Configuration::get('PAYFORT_FORT_MADA_BRANDING'),
             'PAYFORT_FORT_INSTALLMENTS'                      => Configuration::get('PAYFORT_FORT_INSTALLMENTS'),
             'PAYFORT_FORT_INTEGRATION_TYPE_INSTALLMENTS'     => Configuration::get('PAYFORT_FORT_INTEGRATION_TYPE_INSTALLMENTS'),
             'PAYFORT_FORT_SADAD'                             => Configuration::get('PAYFORT_FORT_SADAD'),
@@ -296,6 +311,7 @@ class Payfortfort extends PaymentModule
         $NAPS             = Configuration::get('PAYFORT_FORT_NAPS');
         $credit_card      = Configuration::get('PAYFORT_FORT_CREDIT_CARD');
         $integration_type = Configuration::get('PAYFORT_FORT_INTEGRATION_TYPE');
+        $mada_branding    = Configuration::get('PAYFORT_FORT_MADA_BRANDING');
         $integration_type_installments = Configuration::get('PAYFORT_FORT_INTEGRATION_TYPE_INSTALLMENTS');
 
         $pfHelper = Payfort_Fort_Helper::getInstance();
@@ -308,6 +324,9 @@ class Payfortfort extends PaymentModule
         if ($fortCurrency != 'QAR') {
             $NAPS = 0;
         }
+        if ($fortCurrency != 'SAR') {
+            $mada_branding = 0;
+        }
 
         $this->smarty->assign('url', $url);
         $this->smarty->assign('SADAD', $SADAD);
@@ -315,6 +334,7 @@ class Payfortfort extends PaymentModule
         $this->smarty->assign('credit_card', $credit_card);
         $this->smarty->assign('installments', $installments);
         $this->smarty->assign('integration_type', $integration_type);
+        $this->smarty->assign('mada_branding', $mada_branding);        
         $this->smarty->assign('integration_type_installments', $integration_type_installments);
         $this->smarty->assign('payfort_path', $this->getPathUri());
         
@@ -348,6 +368,11 @@ class Payfortfort extends PaymentModule
     }
     
     public function getCreditCardPaymentOption() {
+        $pfHelper = Payfort_Fort_Helper::getInstance();
+        $frontCurrency = $pfHelper->getFrontCurrency();
+        $baseCurrency  = $pfHelper->getBaseCurrency();
+        $fortCurrency  = $pfHelper->getFortCurrency($baseCurrency, $frontCurrency);
+        
         
         $integration_type = Configuration::get('PAYFORT_FORT_INTEGRATION_TYPE');
         
@@ -357,10 +382,22 @@ class Payfortfort extends PaymentModule
                        ->setForm($this->generateIframeForm())
                        ->setAdditionalInformation($this->fetch('module:payfortfort/views/templates/hook/payment_infos.tpl'));
         } else if($integration_type == PAYFORT_FORT_INTEGRATION_TYPE_MERCAHNT_PAGE2) {
+        $mada_branding    = Configuration::get('PAYFORT_FORT_MADA_BRANDING');
+        if ($fortCurrency != 'SAR') {
+            $mada_branding = 0;
+        }
         $creditCardOption = new PaymentOption();
-        $creditCardOption->setCallToActionText($this->l('Pay With Debit / Cradit Card'))
+            if ($mada_branding){ 
+             $creditCardOption->setCallToActionText($this->l('Pay With Credit / Debit / mada Bank Card'))
                        ->setForm($this->generateForm())
                        ->setAdditionalInformation($this->fetch('module:payfortfort/views/templates/hook/payment_infos.tpl'));
+            }
+            else {
+                $creditCardOption->setCallToActionText($this->l('Pay With Debit / Cradit Card'))
+                ->setForm($this->generateForm())
+                ->setAdditionalInformation($this->fetch('module:payfortfort/views/templates/hook/payment_infos.tpl'));
+            }
+            
         } else {
         $creditCardOption = new PaymentOption();
         $creditCardOption->setCallToActionText($this->l('Pay With Debit / Cradit Card'))
