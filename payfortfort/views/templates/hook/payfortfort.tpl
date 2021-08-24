@@ -59,7 +59,7 @@ p.payment_module a:hover {
                                         </div>
                                         <div class="col-xs-3">
                                             <select class="form-control" id="payfort_fort_expiry_year">
-                                                {section name=date_y start=14 loop=26}
+                                                {section name=date_y start=14 loop=30}
                                                     <option value="{$smarty.section.date_y.index}">20{$smarty.section.date_y.index}</option>
                                                 {/section}
                                             </select>
