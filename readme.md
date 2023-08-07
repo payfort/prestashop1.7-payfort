@@ -8,7 +8,40 @@ We know that payment processing is critical to your business. With this plugin w
 
 ## Configuration and User Guide
 You can download the archive [file](/prestashop-aps.zip) of the plugin and easily install it via Prestashop admin screen.
-Prestashop Plugin user guide is included in the repository [here](/Prestashop%20Plugin%20User%20Guide.pdf) 
+Prestashop Plugin user guide is included in the repository [here](https://github.com/payfort/prestashop1.7-payfort/wiki) 
+
+# Installation
+## Admin Panel
+1. Login to [Admin Panel] of PrestaShop website 
+1. Navigate to Modules-> Modules Manager.   
+1. If prestashop version is < 1.7, navigate to Modules and Services -> Modules and Services. 
+    > > Click on “Upload a module” and choose the module zip file.  
+1. If prestashop version is < 1.7. 
+    > > Click “Add a new module” and choose the module zip file and upload the module. 
+1. - Navigate to Modules-> Modules Manager. If prestashop version is < 1.7 then Navigate to Modules and Services -> Modules and Services. 
+1. - Choose “Amazon Payment Services” payment method 
+1. - Click the Install icon 
+1. - Follow the configuration steps mentioned in Step 3 
+
+# SFTP
+1. Connect via SFTP and navigate to [your site root folder/modules] 
+1. Copy PrestaShop APS module folder under modules folder 
+1. Navigate to Modules-> Modules Manager.  If prestashop version is < 1.7 then Navigate to Modules and Services -> Modules and Services. 
+1. Choose “Amazon Payment Services” payment method 
+1. Click the Install icon 
+1. Follow the configuration steps mentioned in Step 3 
+# Configuration
+
+Follow the below instruction to access configuration page of APS PrestaShop module:  
+
+1. Navigate to Modules-> Modules Manager. If prestashop version is < 1.7 then Navigate to Modules and Services -> Modules and Services. 
+1. Choose “Amazon Payment Services” payment method 
+1. Click on configuration 
+1. On the configuration page, update the configuration and save. 
+
+**Amazon Payment Services Account:** 
+
+If you don't have an APS account click here to sign up for Amazon Payment Services account  https://paymentservices.amazon.com/ 
    
 
 ## Payment Options
