@@ -79,6 +79,15 @@ class AmazonpaymentservicesOrder extends AmazonpaymentservicesSuper
         }
         return $customer->email;
     }
+    public function getPhone()
+    {
+        $address = new Address((int)$this->order->id_address_delivery);
+        if (!Validate::isLoadedObject($address)) {
+            return '';
+        }
+
+        return $address->phone;
+    }
 
     public function getCustomerName()
     {
@@ -266,7 +275,7 @@ class AmazonpaymentservicesOrder extends AmazonpaymentservicesSuper
         if ($this->getOrderId()) {
             $id_order = (int) $this->getOrderId();
             if (! empty($response_params)) {
-                $meta_id =  ApsOrder::saveApsPaymentMetaData($id_order, 'aps_payment_response', Tools::jsonEncode($response_params));
+                $meta_id =  ApsOrder::saveApsPaymentMetaData($id_order, 'aps_payment_response', json_encode($response_params));
                 $this->aps_helper->log('success order #'.$id_order.' meta updated id'.$meta_id);
             }
 

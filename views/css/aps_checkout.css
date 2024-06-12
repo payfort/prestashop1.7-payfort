@@ -93,7 +93,9 @@ body.lang_ar .aps16 .button-align {
     padding: unset;
     margin: unset;
 }
-
+.payment-option img {
+    height: 32px;
+}
 
 input.field-error {
     border: 2px solid red !important;

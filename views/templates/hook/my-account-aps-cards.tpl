@@ -21,7 +21,7 @@
  * @copyright Copyright (c) Stripe
  * @license   Commercial license
 *}
-{if $prestashop_version == '1.7'}
+{if $prestashop_version >= '1.7'}
     <a class="col-lg-4 col-md-6 col-sm-6 col-xs-12" href="{$link->getModuleLink('amazonpaymentservices', 'apscards')|escape:'html':'UTF-8'}" title="{l s='Amazon Payment Services Credit Cards' mod='amazonpaymentservices'}">
         <span class="link-item">
             <i class="material-icons md-36">payment</i>

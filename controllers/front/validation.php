@@ -309,10 +309,20 @@ class AmazonpaymentservicesValidationModuleFrontController extends ModuleFrontCo
                         $error_message = $this->module->l('You have cancelled the payment, please try again.');
                         Context::getContext()->cookie->__set('aps_error_msg', $error_message);
                     }
-                    $redirectUrl = Context::getContext()->link->getPageLink(
-                        'error&fc=module&module=' .  $this->module->name . '&action=displayError'
-                    );
 
+                    if (version_compare(_PS_VERSION_, '1.7', '>=')) {
+                        $redirectUrl = Context::getContext()->link->getModuleLink(
+                            $this->module->name,
+                            'error',
+                            [
+                                'action' => 'displayError',
+                            ]
+                        );
+                    } else {
+                        $redirectUrl = Context::getContext()->link->getPageLink(
+                            'error&fc=module&module=' .  $this->module->name . '&action=displayError'
+                        );
+                    }
                 }
                 if ('offline' === $response_mode) {
                     $this->aps_helper->log('Webhook processed complete');
@@ -370,6 +380,25 @@ class AmazonpaymentservicesValidationModuleFrontController extends ModuleFrontCo
         if (!$authorized && !$custom_apple_order) {
             die($this->l('This payment method is not available.'));
         }
+
+        //Tabby phone number check
+        if (ApsConstant::APS_PAYMENT_METHOD_TABBY === $payment_method ) {
+            $delivery = new Address((int) $cart->id_address_delivery);
+            $phone_number = $delivery->phone;
+            $phone_number_mobile = $delivery->phone_mobile;
+
+            if (!$phone_number && !$phone_number_mobile) {
+                $this->aps_helper->log("Please fill phone number to continue with payment.");
+
+                echo json_encode([
+                    'success'=>false,
+                    'is_tabby'=>true,
+                    'error_message'=>$this->l('Please fill phone number to continue with payment.')
+                ]);
+                exit;
+            }
+        }
+
         $customer = new Customer($cart->id_customer);
         if (!Validate::isLoadedObject($customer)) {
             Tools::redirect('index.php?controller=order&step=1');
@@ -442,8 +471,20 @@ class AmazonpaymentservicesValidationModuleFrontController extends ModuleFrontCo
         } else {
             $error_message = $this->module->l('You have cancelled the payment, please try again.');
             Context::getContext()->cookie->__set('aps_error_msg', $error_message);
+
+            $redirect_url = 'index.php?fc=module&module=amazonpaymentservices&controller=error&action=displayError';
+            if (version_compare(_PS_VERSION_, '1.7', '>=')) {
+                $redirect_url = Context::getContext()->link->getModuleLink(
+                    $this->module->name,
+                    'error',
+                    [
+                        'action'    => 'displayError',
+                    ]
+                );
+            }
+
             Tools::redirect(
-                'index.php?fc=module&module=amazonpaymentservices&controller=error&action=displayError'
+                $redirect_url
             );
         }
     }
@@ -452,8 +493,9 @@ class AmazonpaymentservicesValidationModuleFrontController extends ModuleFrontCo
     {
         $card_bin   = Tools::getValue('card_bin');
         $card_bin = str_replace(array( ' ', '*' ), array( '', '' ), $card_bin);
+        $token_name   = Tools::getValue('token_name');
         $embedded_hosted_checkout   = Tools::getValue('embedded_hosted_checkout');
-        $response = $this->aps_payment->getInstallmentPlanHandler($card_bin, $embedded_hosted_checkout);
+        $response = $this->aps_payment->getInstallmentPlanHandler($card_bin, $token_name, $embedded_hosted_checkout);
 
         echo json_encode($response);
         exit;
@@ -606,11 +648,12 @@ class AmazonpaymentservicesValidationModuleFrontController extends ModuleFrontCo
             if (! filter_var($apple_url, FILTER_VALIDATE_URL)) {
                 throw new \Exception('Apple pay url is invalid');
             }
-            $parse_apple = parse_url($apple_url);
-            $matched_apple = preg_match('/^(?:[^.]+\.)*apple\.com[^.]+$/', $apple_url);
-            if (! isset($parse_apple['scheme']) || ! in_array($parse_apple['scheme'], array( 'https' ), true)  || ! $matched_apple) {
-                throw new \Exception('Apple pay url is invalid');
+
+            $matched_apple = preg_match('/^https\:\/\/[^\.\/]+\.apple\.com\//', $apple_url);
+            if ( ! $matched_apple) {
+                throw new \Exception( 'Apple pay url is invalid' );
             }
+
             echo json_encode($this->aps_payment->validateApplePayUrl($apple_url));
         } catch (\Exception $e) {
             echo json_encode(array( 'error' => $e->getMessage() ));

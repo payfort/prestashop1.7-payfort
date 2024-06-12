@@ -27,11 +27,12 @@ class ApsConstant
 {
 
     //version
-    const APS_VERSION                         = '2.2.0';
+    const APS_VERSION                         = '2.2.1';
     //Payment methods
     const APS_PAYMENT_METHOD_CC               = 'amazonpaymentservices';
     const APS_PAYMENT_METHOD_NAPS             = 'amazonpaymentservices_naps';
     const APS_PAYMENT_METHOD_KNET             = 'amazonpaymentservices_knet';
+    const APS_PAYMENT_METHOD_TABBY            = 'amazonpaymentservices_tabby';
     const APS_PAYMENT_METHOD_VALU             = 'amazonpaymentservices_valu';
     const APS_PAYMENT_METHOD_VISA_CHECKOUT    = 'amazonpaymentservices_visa_checkout';
     const APS_PAYMENT_METHOD_INSTALLMENTS     = 'amazonpaymentservices_installments';

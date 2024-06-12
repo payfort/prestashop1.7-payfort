@@ -42,6 +42,8 @@ class AmazonpaymentservicesConfig extends AmazonpaymentservicesSuper
     private $naps_sort_order;
     private $knet_status;
     private $knet_sort_order;
+    private $tabby_status;
+    private $tabby_sort_order;
     private $valu_status;
     private $valu_allow_downpayment;
     private $valu_downpayment_value;
@@ -107,6 +109,8 @@ class AmazonpaymentservicesConfig extends AmazonpaymentservicesSuper
         'naps_sort_order' => 'AMAZONPAYMENTSERVICES_NAPS_SORT_ORDER',
         'knet_status' => 'AMAZONPAYMENTSERVICES_KNET_STATUS',
         'knet_sort_order' => 'AMAZONPAYMENTSERVICES_KNET_SORT_ORDER',
+        'tabby_status' => 'AMAZONPAYMENTSERVICES_TABBY_STATUS',
+        'tabby_sort_order' => 'AMAZONPAYMENTSERVICES_TABBY_SORT_ORDER',
         'valu_status' => 'AMAZONPAYMENTSERVICES_VALU_STATUS',
         'valu_allow_downpayment' => 'AMAZONPAYMENTSERVICES_VALU_ALLOW_DOWNPAYMENT',
         'valu_downpayment_value' => 'AMAZONPAYMENTSERVICES_VALU_DOWNPAYMENT_VALUE',
@@ -371,6 +375,15 @@ class AmazonpaymentservicesConfig extends AmazonpaymentservicesSuper
     {
         return $this->knet_sort_order;
     }
+    public function getTabbyStatus()
+    {
+        return $this->tabby_status;
+    }
+
+    public function getTabbySortOrder()
+    {
+        return $this->tabby_sort_order;
+    }
 
     public function getValuStatus()
     {
@@ -583,6 +596,13 @@ class AmazonpaymentservicesConfig extends AmazonpaymentservicesSuper
     public function isKnetActive()
     {
         if ($this->knet_status) {
+            return true;
+        }
+        return false;
+    }
+    public function isTabbyActive()
+    {
+        if ($this->tabby_status) {
             return true;
         }
         return false;

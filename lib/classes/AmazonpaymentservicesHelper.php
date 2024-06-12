@@ -87,8 +87,11 @@ class AmazonpaymentservicesHelper extends AmazonpaymentservicesSuper
         }
         if( true === $iso ) {
             $new_amount = $this->convertIntToDecimalAmount( $new_amount, $currency_code );
+            $new_amount = number_format($new_amount, $decimal_points, '.', '');
+        } else {
+            $new_amount = number_format($new_amount, 0, '.', '');
         }
-        $new_amount = number_format($new_amount, 0 , '.' , '');
+
         return $new_amount;
     }
 
@@ -386,6 +389,15 @@ class AmazonpaymentservicesHelper extends AmazonpaymentservicesSuper
         return true;
     }
 
+    public function checkOrderEligibleForTabby()
+    {
+        $supported_currencies = array('SAR', 'AED');
+        if (! in_array($this->getGatewayCurrencyCode(), $supported_currencies)) {
+            return false;
+        }
+        return true;
+    }
+
     public function checkOrderEligibleForNaps()
     {
         $supported_currencies = ['QAR'];
@@ -514,6 +526,9 @@ class AmazonpaymentservicesHelper extends AmazonpaymentservicesSuper
                 break;
             case ApsConstant::APS_PAYMENT_METHOD_KNET:
                     return $this->module->l("KNET");
+                break;
+            case ApsConstant::APS_PAYMENT_METHOD_TABBY:
+                return $this->module->l("Tabby");
                 break;
             case ApsConstant::APS_PAYMENT_METHOD_VALU:
                     return $this->module->l("Buy Now, Pay Monthly");

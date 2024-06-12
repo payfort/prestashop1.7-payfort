@@ -164,6 +164,21 @@ class ApsOrder extends ObjectModel
                     'value' => $aps_payment_response['knet_ref_number']
                  );
             }
+        } elseif (ApsConstant::APS_PAYMENT_METHOD_TABBY == $payment_method) {
+            $display_data['title'] = $objAps->l('Tabby Details');
+
+            if (isset($aps_payment_response['third_party_transaction_number'])) {
+                $display_data['display_data'][] = array(
+                    'label' => $objAps->l('Tabby third party transaction number'),
+                    'value' => $aps_payment_response['third_party_transaction_number']
+                );
+            }
+            if (isset($aps_payment_response['tabby_ref_number'])) {
+                $display_data['display_data'][] = array(
+                    'label' => $objAps->l('Tabby ref number'),
+                    'value' => $aps_payment_response['tabby_ref_number']
+                );
+            }
         } elseif (ApsConstant::APS_PAYMENT_METHOD_INSTALLMENTS == $payment_method || $embedded_order == 1) {
             $display_data['title'] = $objAps->l('Installment Details');
             $aps_installment_amount = ApsOrder::getApsMetaValue($id_order, 'installment_amount');
@@ -427,6 +442,12 @@ class ApsOrder extends ObjectModel
             $display_data['display_data'][] =  array(
                 'label' => $objAps->l('KNET Ref Number'),
                 'value' => $aps_payment_response['knet_ref_number'],
+            );
+        }
+        if (isset($aps_payment_response['tabby_ref_number']) && ! empty($aps_payment_response['tabby_ref_number'])) {
+            $display_data['display_data'][] =  array(
+                'label' => $objAps->l('Tabby Ref Number'),
+                'value' => $aps_payment_response['tabby_ref_number'],
             );
         }
         return $display_data['display_data'];
