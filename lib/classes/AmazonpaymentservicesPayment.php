@@ -7,6 +7,8 @@ class AmazonpaymentservicesPayment extends AmazonpaymentservicesSuper
     private $aps_config;
     private $aps_order;
     private $error_message;
+    const INSTALLMENTS_PLAN_CARD = 'BIN';
+    const INSTALLMENTS_PLAN_TOKEN = 'TOKEN';
 
     public function __construct()
     {
@@ -51,6 +53,12 @@ class AmazonpaymentservicesPayment extends AmazonpaymentservicesSuper
             }
             if ($payment_method == ApsConstant::APS_PAYMENT_METHOD_KNET) {
                 $gateway_params['payment_option'] = 'KNET';
+            } elseif ($payment_method == ApsConstant::APS_PAYMENT_METHOD_TABBY) {
+                $gateway_params['payment_option']    = 'TABBY';
+                $gateway_params['customer_ip'] = $this->aps_helper->getCustomerIp();
+                if(!empty($this->aps_order->getPhone())) {
+                    $gateway_params['phone_number'] = $this->aps_order->getPhone();
+                }
             } elseif ($payment_method == ApsConstant::APS_PAYMENT_METHOD_NAPS) {
                 $gateway_params['payment_option']    = 'NAPS';
             } elseif ($payment_method == ApsConstant::APS_PAYMENT_METHOD_INSTALLMENTS) {
@@ -432,7 +440,7 @@ class AmazonpaymentservicesPayment extends AmazonpaymentservicesSuper
         curl_setopt($ch, CURLOPT_FAILONERROR, 1);
         curl_setopt($ch, CURLOPT_ENCODING, "compress, gzip");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1); // allow redirects
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0); // DON'T allow redirects
         //curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); // return into a variable
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0); // The number of seconds to wait while trying to connect
         //curl_setopt($ch, CURLOPT_TIMEOUT, Yii::app()->params['apiCallTimeout']); // timeout in seconds
@@ -477,7 +485,7 @@ class AmazonpaymentservicesPayment extends AmazonpaymentservicesSuper
         return $issuer_key;
     }
 
-    private function getInstallmentPlanCall($cardnumber, $cartTotal)
+    private function getInstallmentPlanCall($cardnumber, $cartTotal, $binOrTokenFlag)
     {
         $retarr = array(
             'status'           => 'success',
@@ -493,6 +501,17 @@ class AmazonpaymentservicesPayment extends AmazonpaymentservicesSuper
                 'query_command'       => 'GET_INSTALLMENTS_PLANS'
             );
 
+            switch ($binOrTokenFlag) {
+                case self::INSTALLMENTS_PLAN_CARD:
+                    $gateway_params['card_bin']          = $cardnumber;
+                    break;
+                case self::INSTALLMENTS_PLAN_TOKEN:
+                    $gateway_params['token']             = $cardnumber;
+                    break;
+                default:
+                    break;
+            }
+            
             $currency                  = $this->aps_helper->getGatewayCurrencyCode();
             $gateway_params['currency'] = strtoupper($currency);
             $conversion_rate           = $this->aps_helper->getConversionRate($currency);
@@ -539,7 +558,7 @@ class AmazonpaymentservicesPayment extends AmazonpaymentservicesSuper
     /**
      * Get Installment plans ajax handler
      */
-    public function getInstallmentPlanHandler($cardnumber, $embedded_hosted_checkout)
+    public function getInstallmentPlanHandler($cardnumber, $token_name, $embedded_hosted_checkout)
     {
         $cardnumber = str_replace(' ', '', $cardnumber);
         $cartTotal  = $this->context->cart->getOrderTotal(true, Cart::BOTH);
@@ -559,7 +578,23 @@ class AmazonpaymentservicesPayment extends AmazonpaymentservicesSuper
             </div>";
         }
 
-        $response   = $this->getInstallmentPlanCall($cardnumber, $cartTotal);
+        $cardNumberOrToken = '';
+        $response = null;
+
+        if (!empty($token_name)) {
+            $token = ApsToken::getApsToken($this->aps_order-> getCustomerId(), $token_name);
+            if (!empty($token)) {
+                $cardNumberOrToken = substr($token['maskedCC'], 0, 6);
+                $response = $this->getInstallmentPlanCall($cardNumberOrToken, $cartTotal, self::INSTALLMENTS_PLAN_TOKEN);
+            }
+        }
+
+        if (empty($cardNumberOrToken)) {
+            $cardNumberOrToken = $cardnumber;
+            $response   = $this->getInstallmentPlanCall($cardNumberOrToken, $cartTotal, self::INSTALLMENTS_PLAN_CARD);
+        }
+
+        //$response   = $this->getInstallmentPlanCall($cardnumber, $cartTotal);
         $retarr     = array(
             'status'          => 'success',
             'plans_html'      => '',
@@ -1059,7 +1094,8 @@ class AmazonpaymentservicesPayment extends AmazonpaymentservicesSuper
             $discount_total = Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS);
             $shipping_total = Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_SHIPPING);
             $currency       = $this->aps_helper->getGatewayCurrencyCode();
-            $currency_value = $this->aps_helper->getConversionRate($currency);
+            $currency_front = $this->aps_helper->getFrontCurrency();
+            $currency_value = $this->aps_helper->getConversionRate($currency_front);
 
             $apple_order['sub_total'] = $this->aps_helper->convertGatewayAmount($sub_total, $currency_value, $currency, true);
 

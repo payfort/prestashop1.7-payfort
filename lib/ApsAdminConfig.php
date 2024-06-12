@@ -70,6 +70,8 @@ class ApsAdminConfig extends Module
         'naps_sort_order' => 'AMAZONPAYMENTSERVICES_NAPS_SORT_ORDER',
         'knet_status' => 'AMAZONPAYMENTSERVICES_KNET_STATUS',
         'knet_sort_order' => 'AMAZONPAYMENTSERVICES_KNET_SORT_ORDER',
+        'tabby_status' => 'AMAZONPAYMENTSERVICES_TABBY_STATUS',
+        'tabby_sort_order' => 'AMAZONPAYMENTSERVICES_TABBY_SORT_ORDER',
         'valu_status' => 'AMAZONPAYMENTSERVICES_VALU_STATUS',
         'valu_allow_downpayment' => 'AMAZONPAYMENTSERVICES_VALU_ALLOW_DOWNPAYMENT',
         'valu_downpayment_value' => 'AMAZONPAYMENTSERVICES_VALU_DOWNPAYMENT_VALUE',
@@ -274,6 +276,7 @@ class ApsAdminConfig extends Module
         $adminConfig[] =  $this->getAdminVisaCheckoutConfigForms();
         $adminConfig[] =  $this->getAdminNAPSConfigForms();
         $adminConfig[] =  $this->getAdminKNETConfigForms();
+        $adminConfig[] =  $this->getAdminTabbyConfigForms();
         $adminConfig[] =  $this->getAdminValuConfigForms();
         $adminConfig[] =  $this->getAdminApplePayConfigForms();
         return $adminConfig;
@@ -842,6 +845,48 @@ class ApsAdminConfig extends Module
             ),
         );
     }
+    /**
+     * Get payment method TABBY configuration.
+     *
+     * @return mixed
+     */
+    protected function getAdminTabbyConfigForms()
+    {
+        return array(
+            'form' =>
+                array(
+                    'legend' => array(
+                        'title' => $this->l('Amazon Payment Services Configuration : Tabby'),
+                        'icon' => 'icon-cogs',
+                    ),
+                    'input' => array(
+                        array(
+                            'type' => 'select',
+                            'label' => $this->l('Enable'),
+                            'name' => 'tabby_status',
+                            'options' => array(
+                                'query' => array(
+                                    array('id' => 1, 'name' => $this->l('Yes')),
+                                    array('id' => 0, 'name' => $this->l('No'))
+                                ),
+                                'id' => 'id',
+                                'name' => 'name',
+                            ),
+                        ),
+                        array(
+                            'col'  => 6,
+                            'type' => 'text',
+                            'name' => 'tabby_sort_order',
+                            'label' => $this->l('Sort Order'),
+                        ),
+                    ),
+                    'submit' => array(
+                        'title' => $this->l('Save'),
+                    ),
+                ),
+        );
+    }
+
 
     /**
      * Get payment method Valu configuration.

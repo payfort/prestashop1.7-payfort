@@ -84,6 +84,25 @@
 						</td>
 					</tr>
 				{/if}
+				{if (isset($order_data['payment_method']) && $order_data['payment_method'] != 'amazonpaymentservices_tabby')}
+					<tr>
+						<td> {l s='Refunable' mod='amazonpaymentservices'}</td>
+						<td> {$order_data['formatted_total_refundable']|escape:'htmlall':'UTF-8'}</td>
+					</tr>
+					<tr>
+						<td> {l s='Refunded' mod='amazonpaymentservices'}</td>
+						<td> {$order_data['formatted_total_refunded']|escape:'htmlall':'UTF-8'}</td>
+					</tr>
+					<tr>
+						<td>{l s='Refund' mod='amazonpaymentservices'}</td>
+						<td id="refund_status">
+							{if (isset($order_data['total_refundable']) && $order_data['total_refundable'] > 0  && $enable_extension == 1)}
+								<input type="text" width="10" id="refund-amount" value="{$order_data['total_refundable']|escape:'htmlall':'UTF-8'}"/>
+								<a class="button btn btn-primary" id="button-refund">{l s='Refund' mod='amazonpaymentservices'}</a>
+							{/if}
+						</td>
+					</tr>
+				{/if}
 				<tr>
 					<td>{l s='Transactions' mod='amazonpaymentservices'}:</td>
 					<td>

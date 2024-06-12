@@ -44,7 +44,7 @@ class Amazonpaymentservices extends PaymentModule
     {
         $this->name = 'amazonpaymentservices';
         $this->tab = 'payments_gateways';
-        $this->version = '2.1.0';
+        $this->version = '2.2.1';
         $this->author = 'Amazon Payment Services';
         $this->need_instance = 1;
         $this->currencies = true;
@@ -55,7 +55,8 @@ class Amazonpaymentservices extends PaymentModule
          */
         $this->bootstrap = true;
         $this->display = 'view';
-        $this->ps_versions_compliancy = array('min' => '1.5', 'max' => '1.7.9.99');
+//        $this->ps_versions_compliancy = array('min' => '1.5', 'max' => '1.7.9.99');
+        $this->ps_versions_compliancy = array('min' => '1.5', 'max' => '8.9.9.99');
 
         parent::__construct();
 
@@ -582,7 +583,8 @@ class Amazonpaymentservices extends PaymentModule
             ApsConstant::APS_PAYMENT_METHOD_KNET,
             ApsConstant::APS_PAYMENT_METHOD_INSTALLMENTS,
             ApsConstant::APS_PAYMENT_METHOD_VALU,
-            ApsConstant::APS_PAYMENT_METHOD_CC
+            ApsConstant::APS_PAYMENT_METHOD_CC,
+            ApsConstant::APS_PAYMENT_METHOD_TABBY
         ];
         //No extra info to display
         if ($prestashop_version == '1.7' && ! in_array($payment_method, $payment_methods)) {
@@ -631,6 +633,7 @@ class Amazonpaymentservices extends PaymentModule
         $visa_checkout  = $aps_config->getVisaCheckoutStatus();
         $NAPS           = $aps_config->getNapsStatus();
         $KNET           = $aps_config->getKnetStatus();
+        $tabby          = $aps_config->getTabbyStatus();
         $valu           = $aps_config->getValuStatus();
         $apple_pay      = $aps_config->getApplePayStatus();
 
@@ -658,6 +661,11 @@ class Amazonpaymentservices extends PaymentModule
         if ($KNET) {
             if ($aps_helper->checkOrderEligibleForKnet()) {
                 $options[] = array( 'method' => $this->getKnetPaymentOption(), 'sort_order' => $aps_config->getKnetSortOrder());
+            }
+        }
+        if ($tabby) {
+            if ($aps_helper->checkOrderEligibleForTabby()) {
+                $options[] = array( 'method' => $this->getTabbyPaymentOption(), 'sort_order' => $aps_config->getTabbySortOrder());
             }
         }
         if ($valu) {
@@ -878,6 +886,28 @@ class Amazonpaymentservices extends PaymentModule
         }
     }
 
+    public function getTabbyPaymentOption()
+    {
+        $title = $this->l('Pay in 4. No interest, no fees.');
+        $logo_path = Media::getMediaPath(_PS_MODULE_DIR_.$this->name.'/views/img/tabby-logo.png');
+        $tabby_html = $this->apsRedirectionForm(ApsConstant::APS_PAYMENT_METHOD_TABBY, 'redirection', $title, $logo_path);
+
+        if (version_compare(_PS_VERSION_, '1.7', '>=')) {
+            $tabby_option = new \PrestaShop\PrestaShop\Core\Payment\PaymentOption();
+            $tabby_option->setCallToActionText($title);
+            $tabby_option->setLogo($logo_path);
+            $tabby_option->setAdditionalInformation(
+                $this->context->smarty->fetch(
+                    'module:'.$this->name.'/views/templates/hook/payment_info.tpl'
+                )
+            );
+            $tabby_option->setForm($tabby_html);
+            return $tabby_option;
+        } else {
+            return $tabby_html;
+        }
+    }
+
     public function getNAPSPaymentOption()
     {
         $title = $this->l('NAPS');
@@ -970,7 +1000,7 @@ class Amazonpaymentservices extends PaymentModule
         }
     }
 
-    protected function apsValuForm($payment_method, $integration_type, $payment_title = '', $logo_path = null, $allow_downpayment, $downpayment_value = 0)
+    protected function apsValuForm($payment_method, $integration_type, $payment_title, $logo_path, $allow_downpayment, $downpayment_value = 0)
     {
         $this->smarty->assign([
             'payment_title'    => $payment_title,

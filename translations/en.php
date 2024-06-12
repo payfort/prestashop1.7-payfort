@@ -11,6 +11,7 @@ $_MODULE['<{amazonpaymentservices}prestashop>amazonpaymentservices_77189e507dbf1
 $_MODULE['<{amazonpaymentservices}prestashop>amazonpaymentservices_ba5376b5ba3216a7a51eabb18265d921'] = 'Installments';
 $_MODULE['<{amazonpaymentservices}prestashop>amazonpaymentservices_164f45c3fd26284291cbcaf3e4a949db'] = 'Visa Checkout';
 $_MODULE['<{amazonpaymentservices}prestashop>amazonpaymentservices_5aefae6d65b589a30fb05ae56ae71d0d'] = 'KNET';
+$_MODULE['<{amazonpaymentservices}prestashop>amazonpaymentservices_5aefae6d65b589a30fb05ae56ae71d0d'] = 'Tabby';
 $_MODULE['<{amazonpaymentservices}prestashop>amazonpaymentservices_12ff4e07d68f4e2f26a9f14b7918670a'] = 'NAPS';
 $_MODULE['<{amazonpaymentservices}prestashop>amazonpaymentservices_7f640ed211360a10e9d9fbfaff1fc0f3'] = 'Invalid card length';
 $_MODULE['<{amazonpaymentservices}prestashop>amazonpaymentservices_92f3d8e6378d6d0d904679fb733f04fd'] = 'Card number cannot be empty';
@@ -37,5 +38,8 @@ $_MODULE['<{amazonpaymentservices}prestashop>payment_form_hosted_60a104dc50579d6
 $_MODULE['<{amazonpaymentservices}prestashop>amazonpaymentserviceshelper_cf0da22f65b59fbd6b7c7bf641adf6ad'] = 'KNET Details';
 $_MODULE['<{amazonpaymentservices}prestashop>amazonpaymentserviceshelper_f91343cfd66d46bcb774f361dd41ec68'] = 'KNET third party transaction number';
 $_MODULE['<{amazonpaymentservices}prestashop>amazonpaymentserviceshelper_2501c0d138e2f3bc804970b7ae61504e'] = 'KNET ref number';
+$_MODULE['<{amazonpaymentservices}prestashop>amazonpaymentserviceshelper_cf0da22f65b59fbd6b7c7bf641adf6aq'] = 'Tabby Details';
+$_MODULE['<{amazonpaymentservices}prestashop>amazonpaymentserviceshelper_f91343cfd66d46bcb774f361dd41ec6q'] = 'Tabby third party transaction number';
+$_MODULE['<{amazonpaymentservices}prestashop>amazonpaymentserviceshelper_2501c0d138e2f3bc804970b7ae61504q'] = 'Tabby ref number';
 $_MODULE['<{amazonpaymentservices}prestashop>amazonpaymentserviceshelper_b1b7d26c9f4f57a37ee91ec2b1f52b87'] = 'Installment Details';
 $_MODULE['<{amazonpaymentservices}prestashop>amazonpaymentserviceshelper_ba5376b5ba3216a7a51eabb18265d921'] = 'Installments';

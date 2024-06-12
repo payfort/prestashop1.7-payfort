@@ -462,6 +462,7 @@ var amazonpaymentservices = (function () {
                 })
                 .serialize() + '&action=checkout';
 
+            $('#alert_no_phone_number').remove();
 			$.ajax({
                 url : aps_front_controller,
                 type: 'POST',
@@ -486,8 +487,14 @@ var amazonpaymentservices = (function () {
                         }
                     }
                     else if (data.success == false ) {
-                        $("#payment-confirmation button[type='submit']").removeAttr('disabled');
-                        $('#installment_plans .plans').append('<div class="alert alert-danger alert-dismissible">' + data.error_message + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+                        if (data.is_tabby == true ) {
+                            $("#payment-confirmation button[type='submit']").removeClass('disabled');
+                            $('#payment-confirmation').prepend('<div id = "alert_no_phone_number" class="alert alert-danger alert-dismissible">' + data.error_message + '</div>');
+
+                        } else {
+                            $("#payment-confirmation button[type='submit']").removeAttr('disabled');
+                            $('#installment_plans .plans').append('<div class="alert alert-danger alert-dismissible">' + data.error_message + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+                        }
                     }
                     else {
                         if (data.url) {
@@ -586,11 +593,12 @@ $( document.body ).on(
             return;
         }
         var card_bin      = '';
+        var token_name = frm_aps.find( ".aps-radio:checked" ).val();
         var bin_valid     = 0;
         var token_request = 0;
         var cardnumber    = frm_aps.find('.aps_card_number').val().trim();
         if( cardnumber.length >= 15 ) {
-            card_bin  = cardnumber.substring( 0,6 );
+            card_bin  = cardnumber.substring( 0,8 );
             bin_valid = 1;
         } else {
             var cvv      = frm_aps.find('.aps_saved_card_security_code').val().trim()
@@ -617,6 +625,7 @@ $( document.body ).on(
                     url:aps_front_controller,
                     data:{
                         card_bin : card_bin,
+                        token_name : token_name,
                         action   : 'getInstallmentPlans',
                         embedded_hosted_checkout : is_embedded_hosted_checkout
                     },

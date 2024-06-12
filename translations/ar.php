@@ -11,6 +11,7 @@ $_MODULE['<{amazonpaymentservices}prestashop>amazonpaymentservices_77189e507dbf1
 $_MODULE['<{amazonpaymentservices}prestashop>amazonpaymentservices_ba5376b5ba3216a7a51eabb18265d921'] = 'Installments';
 $_MODULE['<{amazonpaymentservices}prestashop>amazonpaymentservices_164f45c3fd26284291cbcaf3e4a949db'] = 'Visa Checkout';
 $_MODULE['<{amazonpaymentservices}prestashop>amazonpaymentservices_5aefae6d65b589a30fb05ae56ae71d0d'] = 'KNET';
+$_MODULE['<{amazonpaymentservices}prestashop>amazonpaymentservices_5aefae6d65b589a30fb05ae56ae71d0q'] = 'Tabby';
 $_MODULE['<{amazonpaymentservices}prestashop>amazonpaymentservices_12ff4e07d68f4e2f26a9f14b7918670a'] = 'NAPS';
 $_MODULE['<{amazonpaymentservices}prestashop>amazonpaymentservices_7f640ed211360a10e9d9fbfaff1fc0f3'] = 'طول البطاقة غير صالح';
 $_MODULE['<{amazonpaymentservices}prestashop>amazonpaymentservices_92f3d8e6378d6d0d904679fb733f04fd'] = 'لا يمكن أن يكون رقم البطاقة فارغًا';
@@ -24,6 +25,7 @@ $_MODULE['<{amazonpaymentservices}prestashop>amazonpaymentservices_ba6c0091fcd65
 $_MODULE['<{amazonpaymentservices}prestashop>amazonpaymentservices_dbf3e9e83dd14f4405bad7240712eb4a'] = 'يرجى إكمال عملية التقييم';
 $_MODULE['<{amazonpaymentservices}prestashop>amazonpaymentservices_4607ccb71469675944516398e717479c'] = 'الرجاء قبول الشروط والأحكام';
 $_MODULE['<{amazonpaymentservices}prestashop>amazonpaymentservices_77942aaf6aa31f1e68e04c8253ba0049'] = 'رقم الجوال غير صحيح';
+$_MODULE['<{amazonpaymentservices}prestashop>amazonpaymentservices_48b2c77ee960e7205625be1f608df553'] = 'قسّمها على 4. بدون أي فوائد، أو رسوم.';
 $_MODULE['<{amazonpaymentservices}prestashop>payment_form_hosted_cc_931d3a3ad177dd96a28c9642fec11b01'] = 'رقم البطاقة';
 $_MODULE['<{amazonpaymentservices}prestashop>payment_form_hosted_cc_8dffa6260715e0be982a2312b2f10f3e'] = 'إسم صاحب البطاقة';
 $_MODULE['<{amazonpaymentservices}prestashop>payment_form_hosted_cc_5abc7a3ac0ae1545cc801303727f53da'] = 'تاريخ الانتهاء';
