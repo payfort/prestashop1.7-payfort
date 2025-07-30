@@ -37,6 +37,7 @@ Prestashop Plugin user guide is included in the repository [here](/Prestashop%20
 
 | Plugin Version | Release Notes |
 | :---: | :--- |
+| 2.2.2 |   * Use password input type to hide sensitive information. | 
 | 2.2.1 |   * ApplePay front/back currency fix. <br/> * Prestashop version>8 changes |
 | 2.2.0 |   * Tabby payment option is added | 
 | 2.1.0 |   * valU changes: downpayment, ToU and Cashback amounts are included in checkout page | 
