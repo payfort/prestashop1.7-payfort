@@ -1194,23 +1194,37 @@ class AmazonpaymentservicesPayment extends AmazonpaymentservicesSuper
             if (isset($address_data)) {
                 if ( isset( $address_data['addressLines'] ) && ! empty( $address_data['addressLines'] ) ) {
                     if ( isset( $address_data['addressLines'][0] ) && ! empty( $address_data['addressLines'][0] ) ) {
-                        $address_1 = $address_data['addressLines'][0];
+                        $address_1 = Tools::safeOutput($address_data['addressLines'][0]);
                     }
                     if ( isset( $address_data['addressLines'][1] ) && ! empty( $address_data['addressLines'][1] ) ) {
-                        $address_2 = $address_data['addressLines'][1];
+                        $address_2 = Tools::safeOutput($address_data['addressLines'][1]);
                     }
                 }
                 if ( isset( $address_data['givenName'] ) && ! empty( $address_data['givenName'] ) ) {
-                    $firstname = $address_data['givenName'];
+                    $firstname = Tools::safeOutput($address_data['givenName']);
                 }
                 if ( isset( $address_data['familyName'] ) && ! empty( $address_data['familyName'] ) ) {
-                    $lastname = $address_data['familyName'];
+                    $lastname = Tools::safeOutput($address_data['familyName']);
                 }
                 if ( isset( $address_data['emailAddress'] ) && ! empty( $address_data['emailAddress'] ) ) {
-                    $email = $address_data['emailAddress'];
+                    $email = filter_var($address_data['emailAddress'], FILTER_VALIDATE_EMAIL);
+                    if (!$email) {
+                        throw new Exception('Invalid email address format');
+                    }
+                    $email = filter_var($email, FILTER_SANITIZE_EMAIL);
                 }
                 if ( isset( $address_data['phoneNumber'] ) && ! empty( $address_data['phoneNumber'] ) ) {
-                    $telephone = $address_data['phoneNumber'];
+                    $telephone = Tools::safeOutput($address_data['phoneNumber']);
+                }
+
+                // Authentication verification
+                $current_customer_id = (int)Context::getContext()->cart->id_customer;
+                if ($current_customer_id > 0) {
+                    $current_customer = new Customer($current_customer_id);
+                    if ($current_customer->email !== $email) {
+                        $this->aps_helper->log('SECURITY: Attempted unauthorized customer context change from ' . $current_customer->email . ' to ' . $email);
+                        throw new Exception('Authentication required for customer context change');
+                    }
                 }
                 $this->aps_helper->log( 'APS apple pay customer id ' . (int)Context::getContext()->cart->id_customer);
                 if (0 == (int)Context::getContext()->cart->id_customer) {
@@ -1280,6 +1294,12 @@ class AmazonpaymentservicesPayment extends AmazonpaymentservicesSuper
 
     public function updateContext(Customer $customer)
     {
+        // Regenerate session ID
+        session_regenerate_id(true);
+        // Validate session integrity
+        if (!$this->validateSessionIntegrity()) {
+            throw new Exception('Session validation failed');
+        }
         Context::getContext()->customer = $customer;
         Context::getContext()->smarty->assign('confirmation', 1);
         Context::getContext()->cookie->id_customer = (int)$customer->id;

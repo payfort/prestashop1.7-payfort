@@ -286,12 +286,29 @@
 		function create_cart_order( address_obj ) {
 			return new Promise(
 				function(resolve, reject) {
+					// Get CSRF token for security
+					var csrf_token = '';
+					if (typeof prestashop !== 'undefined' && prestashop.token) {
+						csrf_token = prestashop.token;
+					} else if (typeof token !== 'undefined') {
+						csrf_token = token;
+					} else {
+						// Fallback: try to get token from a meta tag or hidden input
+						var tokenElement = $('meta[name="csrf-token"]').attr('content') || 
+										   $('input[name="token"]').val() || 
+										   $('input[name="_token"]').val();
+						if (tokenElement) {
+							csrf_token = tokenElement;
+						}
+					}
+					
 					$.ajax({
 		                url : aps_front_controller,
 		                type: 'POST',
 		                data: {
 							action: 'create_cart_order',
-							address_obj
+							address_obj: address_obj,
+							csrf_token: csrf_token
 						},
 						async: false,
 		                success: function (){

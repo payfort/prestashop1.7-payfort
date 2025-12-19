@@ -776,12 +776,18 @@ class AmazonpaymentservicesValidationModuleFrontController extends ModuleFrontCo
     {
         $status      = 'success';
         $error_msg   = '';
-        //$address_obj =  $_POST;
-        $address_obj =  Tools::getAllValues();
+        
         try {
+            // CSRF Protection
+            $this->validateCSRFToken();
+            
+            $address_obj = Tools::getAllValues();
+            
             if (isset($address_obj['address_obj'])) {
-                $address_data = $address_obj['address_obj'];
-                $response =  $this->aps_payment->updateCustomerAndAddress($address_data);
+                // Input validation and sanitization
+                $address_data = $this->validateAndSanitizeAddressData($address_obj['address_obj']);
+                
+                $response = $this->aps_payment->updateCustomerAndAddress($address_data);
                 if ('success' == $response['status']) {
                     $custom_apple_order = 1;
                     $this->aps_helper->log("called validateRequestAndCreateOrder");
@@ -793,10 +799,14 @@ class AmazonpaymentservicesValidationModuleFrontController extends ModuleFrontCo
                     $status    = 'error';
                     $error_msg = $response['error_msg'];
                 }
+            } else {
+                throw new Exception('Invalid request - missing address data');
             }
         } catch (\Exception $e) {
             $status    = 'error';
             $error_msg = $e->getMessage();
+            // Security logging
+            $this->aps_helper->log('SECURITY: createCartOrder failed - ' . $e->getMessage() . ' - IP: ' . Tools::getRemoteAddr());
         }
         $result = array(
             'status'    => $status,
@@ -804,6 +814,93 @@ class AmazonpaymentservicesValidationModuleFrontController extends ModuleFrontCo
         );
         echo json_encode($result);
         exit;
+    }
+
+    /**
+     * Validate CSRF token
+     */
+    private function validateCSRFToken()
+    {
+        $token = Tools::getValue('csrf_token');
+        if (!$token) {
+            throw new Exception('Missing CSRF token');
+        }
+        
+        if (!Tools::isSubmit('csrf_token') || $token !== Tools::getToken(false)) {
+            $this->aps_helper->log('SECURITY: Invalid CSRF token from IP: ' . Tools::getRemoteAddr());
+            throw new Exception('Invalid CSRF token');
+        }
+    }
+
+    /**
+     * Validate and sanitize address data
+     */
+    private function validateAndSanitizeAddressData($address_data)
+    {
+        if (!is_array($address_data)) {
+            throw new Exception('Invalid address data format');
+        }
+        
+        $sanitized = [];
+        
+        // Validate and sanitize email
+        if (isset($address_data['emailAddress'])) {
+            $email = filter_var($address_data['emailAddress'], FILTER_VALIDATE_EMAIL);
+            if (!$email) {
+                throw new Exception('Invalid email address format');
+            }
+            $sanitized['emailAddress'] = filter_var($email, FILTER_SANITIZE_EMAIL);
+        }
+        
+        // Sanitize names
+        if (isset($address_data['givenName'])) {
+            $sanitized['givenName'] = Tools::safeOutput(strip_tags($address_data['givenName']));
+        }
+        
+        if (isset($address_data['familyName'])) {
+            $sanitized['familyName'] = Tools::safeOutput(strip_tags($address_data['familyName']));
+        }
+        
+        // Sanitize address lines
+        if (isset($address_data['addressLines']) && is_array($address_data['addressLines'])) {
+            $sanitized['addressLines'] = [];
+            foreach ($address_data['addressLines'] as $key => $line) {
+                if ($key < 3) { // Limit to 3 address lines
+                    $sanitized['addressLines'][$key] = Tools::safeOutput(strip_tags($line));
+                }
+            }
+        }
+        
+        // Validate and sanitize country code
+        if (isset($address_data['countryCode'])) {
+            $country_code = strtoupper(Tools::safeOutput($address_data['countryCode']));
+            if (preg_match('/^[A-Z]{2}$/', $country_code)) {
+                $sanitized['countryCode'] = $country_code;
+            }
+        }
+        
+        // Sanitize phone number
+        if (isset($address_data['phoneNumber'])) {
+            $phone = preg_replace('/[^0-9+\-\s\(\)]/', '', $address_data['phoneNumber']);
+            $sanitized['phoneNumber'] = Tools::safeOutput($phone);
+        }
+        
+        // Sanitize postal code
+        if (isset($address_data['postalCode'])) {
+            $sanitized['postalCode'] = Tools::safeOutput(strip_tags($address_data['postalCode']));
+        }
+        
+        // Sanitize locality/city
+        if (isset($address_data['locality'])) {
+            $sanitized['locality'] = Tools::safeOutput(strip_tags($address_data['locality']));
+        }
+        
+        // Sanitize administrative area
+        if (isset($address_data['administrativeArea'])) {
+            $sanitized['administrativeArea'] = Tools::safeOutput(strip_tags($address_data['administrativeArea']));
+        }
+        
+        return $sanitized;
     }
 
     protected function displayError($message = '')
