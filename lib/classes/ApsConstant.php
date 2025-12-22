@@ -27,7 +27,7 @@ class ApsConstant
 {
 
     //version
-    const APS_VERSION                         = '2.2.2';
+    const APS_VERSION                         = '2.2.3';
     //Payment methods
     const APS_PAYMENT_METHOD_CC               = 'amazonpaymentservices';
     const APS_PAYMENT_METHOD_NAPS             = 'amazonpaymentservices_naps';
