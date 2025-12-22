@@ -44,7 +44,7 @@ class Amazonpaymentservices extends PaymentModule
     {
         $this->name = 'amazonpaymentservices';
         $this->tab = 'payments_gateways';
-        $this->version = '2.2.2';
+        $this->version = '2.2.3';
         $this->author = 'Amazon Payment Services';
         $this->need_instance = 1;
         $this->currencies = true;

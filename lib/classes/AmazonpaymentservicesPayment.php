@@ -1231,9 +1231,12 @@ class AmazonpaymentservicesPayment extends AmazonpaymentservicesSuper
                     $id_customer = Customer::customerExists($email, true, false);
                     $customer = '';
                     if ($id_customer) {
-                        $customer = new Customer($id_customer);
-                        $this->aps_helper->log( 'APS apple pay customer exist ' . $id_customer);
-
+                        if (Context::getContext()->customer->isLogged() && Context::getContext()->customer->email === $email) {
+                            $customer = new Customer($id_customer);
+                            $this->aps_helper->log( 'APS apple pay customer exist ' . $id_customer);
+                        } else {
+                            throw new Exception('User needs to login');
+                        }
                     } else {
                         $customer = new Customer();
                         if (version_compare(_PS_VERSION_, '1.7', '>=')) {
