@@ -296,9 +296,20 @@ class AmazonpaymentservicesValidationModuleFrontController extends ModuleFrontCo
             } else {
                 $success = $this->aps_payment->handleApsResponse($response_params, $response_mode, $integration_type);
                 if ($success) {
-                    $redirectUrl = Context::getContext()->link->getPageLink(
-                        'order-confirmation&id_cart=' . $objOrder->id_cart . '&id_module=' . $this->module->id . '&id_order=' . $objOrder->id . '&key=' . $customer->secure_key
-                    );
+                    // Defense in depth: only include secure_key if the customer matches
+                    // the currently logged-in user's session (prevents leaking via forged requests)
+                    $currentCustomerId = isset(Context::getContext()->customer->id) ? (int)Context::getContext()->customer->id : 0;
+                    if ($currentCustomerId > 0 && $currentCustomerId === (int)$objOrder->id_customer) {
+                        $redirectUrl = Context::getContext()->link->getPageLink(
+                            'order-confirmation&id_cart=' . $objOrder->id_cart . '&id_module=' . $this->module->id . '&id_order=' . $objOrder->id . '&key=' . $customer->secure_key
+                        );
+                    } else {
+                        // Unauthenticated or mismatched session — redirect to generic confirmation without key
+                        $redirectUrl = Context::getContext()->link->getPageLink(
+                            'order-confirmation&id_cart=' . $objOrder->id_cart . '&id_module=' . $this->module->id . '&id_order=' . $objOrder->id
+                        );
+                        $this->aps_helper->log('SECURITY: Omitted secure_key from redirect — session customer mismatch or unauthenticated request');
+                    }
                     $this->aps_helper->log('success redirectUrl');
                 } else {
                     //$redirectUrl = Context::getContext()->link->getPageLink('order&step=1');
@@ -339,9 +350,18 @@ class AmazonpaymentservicesValidationModuleFrontController extends ModuleFrontCo
                         ]
                     )) {
                         $this->aps_helper->log('redirect_url');
-                        $redirectUrl = Context::getContext()->link->getPageLink(
-                            'order-confirmation&id_cart=' . $objOrder->id_cart . '&id_module=' . $this->module->id . '&id_order=' . $objOrder->id . '&key=' . $customer->secure_key
-                        );
+                        // Defense in depth: same session check for secondary redirect
+                        $currentCustomerId = isset(Context::getContext()->customer->id) ? (int)Context::getContext()->customer->id : 0;
+                        if ($currentCustomerId > 0 && $currentCustomerId === (int)$objOrder->id_customer) {
+                            $redirectUrl = Context::getContext()->link->getPageLink(
+                                'order-confirmation&id_cart=' . $objOrder->id_cart . '&id_module=' . $this->module->id . '&id_order=' . $objOrder->id . '&key=' . $customer->secure_key
+                            );
+                        } else {
+                            $redirectUrl = Context::getContext()->link->getPageLink(
+                                'order-confirmation&id_cart=' . $objOrder->id_cart . '&id_module=' . $this->module->id . '&id_order=' . $objOrder->id
+                            );
+                            $this->aps_helper->log('SECURITY: Omitted secure_key from secondary redirect — session customer mismatch');
+                        }
                     }
                 }
             }
