@@ -210,12 +210,9 @@ class AmazonpaymentservicesPayment extends AmazonpaymentservicesSuper
             if (strtolower($calculateSignature) !== strtolower($signature)) {
                 $responseMessage = $this->module->l('Invalid Singature');
                 $this->aps_helper->log(sprintf('Invalid Signature. Calculated Signature: %1s, Response Signature: %2s', $calculateSignature, $signature));
-                // There is a problem in the response we got
-                $r = $this->aps_order->onHoldOrder($responseMessage);
-                if ($r) {
-                    throw new Exception($responseMessage);
-                }
-                return true;
+                // There is a problem in the response we got — always reject invalid signatures
+                $this->aps_order->onHoldOrder($responseMessage);
+                return false;
             }
 
             if (ApsConstant::APS_PAYMENT_CANCEL_RESPONSE_CODE === $responseCode) {
@@ -282,8 +279,9 @@ class AmazonpaymentservicesPayment extends AmazonpaymentservicesSuper
             $this->error_message = $e->getMessage();
             $this->aps_helper->log("ERROR : handleApsResponse : " . $e->getMessage());
             $this->aps_helper->setFlashMsg($e->getMessage(), ApsConstant::APS_FLASH_MSG_ERROR);
-            // Don't cancelled order if already payment success
-            if ( in_array($this->aps_order->getStatusId(),
+            // Don't cancel/refill cart if order already in a payment success state,
+            // but always return false — an exception means this response was not valid
+            if ( !in_array($this->aps_order->getStatusId(),
                 [
                     $this->aps_helper->processingOrderStatusId(),
                     $this->aps_helper->shippedOrderStatusId(),
@@ -293,8 +291,6 @@ class AmazonpaymentservicesPayment extends AmazonpaymentservicesSuper
                     $this->aps_helper->processingProgressOrderStatusId()
                 ]
                 ) ) {
-                return true;
-            } else {
                 $this->refillCart($id_order);
                 Context::getContext()->cookie->__set('aps_error_msg', 'Technical error occurred : ' . $e->getMessage());
             }
