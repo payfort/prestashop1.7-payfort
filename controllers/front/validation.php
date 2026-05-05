@@ -148,9 +148,18 @@ class AmazonpaymentservicesValidationModuleFrontController extends ModuleFrontCo
                 if (true === $url || 1 == $url) {
                     $objOrder = new Order($id_order);
                     $customer = new Customer($objOrder->id_customer);
-                    $url = Context::getContext()->link->getPageLink(
-                        'order-confirmation&id_cart=' . $objOrder->id_cart . '&id_module=' . $this->module->id . '&id_order=' . $objOrder->id . '&key=' . $customer->secure_key
-                    );
+                    // Defense in depth: only include secure_key if the customer matches the session
+                    $currentCustomerId = isset(Context::getContext()->customer->id) ? (int)Context::getContext()->customer->id : 0;
+                    if ($currentCustomerId > 0 && $currentCustomerId === (int)$objOrder->id_customer) {
+                        $url = Context::getContext()->link->getPageLink(
+                            'order-confirmation&id_cart=' . $objOrder->id_cart . '&id_module=' . $this->module->id . '&id_order=' . $objOrder->id . '&key=' . $customer->secure_key
+                        );
+                    } else {
+                        $url = Context::getContext()->link->getPageLink(
+                            'order-confirmation&id_cart=' . $objOrder->id_cart . '&id_module=' . $this->module->id . '&id_order=' . $objOrder->id
+                        );
+                        $this->aps_helper->log('SECURITY: Omitted secure_key from Visa Checkout redirect — session customer mismatch or unauthenticated request');
+                    }
                 }
                 $success = false;
                 if ($url != false) {
@@ -619,9 +628,18 @@ class AmazonpaymentservicesValidationModuleFrontController extends ModuleFrontCo
             if ('success'  == $response['status']) {
                 $objOrder = new Order($id_order);
                 $customer = new Customer($objOrder->id_customer);
-                $redirect_url = Context::getContext()->link->getPageLink(
-                    'order-confirmation&id_cart=' . $objOrder->id_cart . '&id_module=' . $this->module->id . '&id_order=' . $objOrder->id . '&key=' . $customer->secure_key
-                );
+                // Defense in depth: only include secure_key if the customer matches the session
+                $currentCustomerId = isset(Context::getContext()->customer->id) ? (int)Context::getContext()->customer->id : 0;
+                if ($currentCustomerId > 0 && $currentCustomerId === (int)$objOrder->id_customer) {
+                    $redirect_url = Context::getContext()->link->getPageLink(
+                        'order-confirmation&id_cart=' . $objOrder->id_cart . '&id_module=' . $this->module->id . '&id_order=' . $objOrder->id . '&key=' . $customer->secure_key
+                    );
+                } else {
+                    $redirect_url = Context::getContext()->link->getPageLink(
+                        'order-confirmation&id_cart=' . $objOrder->id_cart . '&id_module=' . $this->module->id . '&id_order=' . $objOrder->id
+                    );
+                    $this->aps_helper->log('SECURITY: Omitted secure_key from valU redirect — session customer mismatch or unauthenticated request');
+                }
                 if (!empty($active_tenure)) {
                     ApsOrder::saveApsPaymentMetaData($id_order, 'active_tenure', $active_tenure);
                 }
@@ -710,9 +728,18 @@ class AmazonpaymentservicesValidationModuleFrontController extends ModuleFrontCo
                     ]
                 )) {
                 $customer = new Customer($objOrder->id_customer);
-                $redirect_url = Context::getContext()->link->getPageLink(
-                    'order-confirmation&id_cart=' . $objOrder->id_cart . '&id_module=' . $this->module->id . '&id_order=' . $objOrder->id . '&key=' . $customer->secure_key
-                );
+                // Defense in depth: only include secure_key if the customer matches the session
+                $currentCustomerId = isset(Context::getContext()->customer->id) ? (int)Context::getContext()->customer->id : 0;
+                if ($currentCustomerId > 0 && $currentCustomerId === (int)$objOrder->id_customer) {
+                    $redirect_url = Context::getContext()->link->getPageLink(
+                        'order-confirmation&id_cart=' . $objOrder->id_cart . '&id_module=' . $this->module->id . '&id_order=' . $objOrder->id . '&key=' . $customer->secure_key
+                    );
+                } else {
+                    $redirect_url = Context::getContext()->link->getPageLink(
+                        'order-confirmation&id_cart=' . $objOrder->id_cart . '&id_module=' . $this->module->id . '&id_order=' . $objOrder->id
+                    );
+                    $this->aps_helper->log('SECURITY: Omitted secure_key from Apple Pay redirect — session customer mismatch or unauthenticated request');
+                }
                 $this->aps_helper->log('sendApplePaymentToAps redirect_url0 '. $redirect_url);
             } else {
                 Context::getContext()->cookie->__set('aps_error_msg', $apple_payment['message']);
@@ -738,9 +765,18 @@ class AmazonpaymentservicesValidationModuleFrontController extends ModuleFrontCo
                     ]
                 )) {
                     $customer = new Customer($objOrder->id_customer);
-                    $redirect_url = Context::getContext()->link->getPageLink(
-                        'order-confirmation&id_cart=' . $objOrder->id_cart . '&id_module=' . $this->module->id . '&id_order=' . $objOrder->id . '&key=' . $customer->secure_key
-                    );
+                    // Defense in depth: only include secure_key if the customer matches the session
+                    $currentCustomerId = isset(Context::getContext()->customer->id) ? (int)Context::getContext()->customer->id : 0;
+                    if ($currentCustomerId > 0 && $currentCustomerId === (int)$objOrder->id_customer) {
+                        $redirect_url = Context::getContext()->link->getPageLink(
+                            'order-confirmation&id_cart=' . $objOrder->id_cart . '&id_module=' . $this->module->id . '&id_order=' . $objOrder->id . '&key=' . $customer->secure_key
+                        );
+                    } else {
+                        $redirect_url = Context::getContext()->link->getPageLink(
+                            'order-confirmation&id_cart=' . $objOrder->id_cart . '&id_module=' . $this->module->id . '&id_order=' . $objOrder->id
+                        );
+                        $this->aps_helper->log('SECURITY: Omitted secure_key from Apple Pay redirect — session customer mismatch or unauthenticated request');
+                    }
                     $this->aps_helper->log('sendApplePaymentToAps redirect_url2 '. $redirect_url);
                 }
             } else {
