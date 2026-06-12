@@ -185,14 +185,30 @@ class AmazonpaymentservicesPayment extends AmazonpaymentservicesSuper
                 }
             }
 
-            $signature_type     = isset($responseParams['digital_wallet']) && 'APPLE_PAY' === $responseParams['digital_wallet'] ? 'apple_pay' : 'regular';
+            $signature_type = 'regular';
+            if (!empty($payment_method) && $payment_method === ApsConstant::APS_PAYMENT_METHOD_APPLE_PAY) {
+                $signature_type = 'apple_pay';
+            }
 
-            //check webhook call for apple pay
+            // For webhook commands, also derive channel from stored payment method (already set above)
+            // rather than trusting request parameters like access_code.
             if (isset($responseParams['command']) && in_array($responseParams['command'], array('REFUND', 'CAPTURE', 'VOID_AUTHORIZATION'))) {
-                if (isset($responseParams['access_code']) && $responseParams['access_code'] == $this->aps_config->getApplePayAccessCode()) {
-                    $signature_type = 'apple_pay';
+                // If $payment_method is still empty (e.g. valu reference lookup pending), attempt to resolve it
+                if (empty($payment_method) && $valu_order_id_by_reference != '') {
+                    $resolved_pm = ApsOrder::getApsMetaValue($valu_order_id_by_reference, 'payment_method');
+                    if ($resolved_pm === ApsConstant::APS_PAYMENT_METHOD_APPLE_PAY) {
+                        $signature_type = 'apple_pay';
+                    }
                 }
             }
+
+            if ($signature_type === 'apple_pay' && !$this->aps_config->getApplePayStatus()) {
+                $responseMessage = 'Invalid payment channel: Apple Pay is not enabled';
+                $this->aps_helper->log('Apple Pay signature verification attempted but Apple Pay is not enabled. Order: ' . $id_order);
+                $this->aps_order->onHoldOrder($responseMessage);
+                return false;
+            }
+
             $calculateSignature = $this->aps_helper->calculateSignature($responseGatewayParams, 'response', $signature_type);
 
             //update order id if webhook call for valu refund

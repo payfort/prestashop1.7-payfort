@@ -235,21 +235,25 @@ class AmazonpaymentservicesHelper extends AmazonpaymentservicesSuper
             }
             if ('apple_pay' === $type) {
                 if ($signType == 'request') {
-                    $shaString = $this->aps_config->getApplePayRequestShaPhrase() . $shaString . $this->aps_config->getApplePayRequestShaPhrase();
-                    $hmac_key  = $this->aps_config->getApplePayRequestShaPhrase();
+                    $sha_phrase = $this->aps_config->getApplePayRequestShaPhrase();
                 } else {
-                    $shaString = $this->aps_config->getApplePayResponseShaPhrase() . $shaString . $this->aps_config->getApplePayResponseShaPhrase();
-                    $hmac_key  = $this->aps_config->getApplePayResponseShaPhrase();
+                    $sha_phrase = $this->aps_config->getApplePayResponseShaPhrase();
                 }
             } else {
                 if ($signType == 'request') {
-                    $shaString = $this->aps_config->getRequestShaPhrase() . $shaString . $this->aps_config->getRequestShaPhrase();
-                    $hmac_key  = $this->aps_config->getRequestShaPhrase();
+                    $sha_phrase = $this->aps_config->getRequestShaPhrase();
                 } else {
-                    $shaString = $this->aps_config->getResponseShaPhrase() . $shaString . $this->aps_config->getResponseShaPhrase();
-                    $hmac_key  = $this->aps_config->getResponseShaPhrase();
+                    $sha_phrase = $this->aps_config->getResponseShaPhrase();
                 }
             }
+
+            if (empty($sha_phrase)) {
+                $this->log('Signature calculation attempted with empty SHA phrase (type=' . $type . ', signType=' . $signType . ')');
+                return '__INVALID_EMPTY_SECRET__';
+            }
+
+            $shaString = $sha_phrase . $shaString . $sha_phrase;
+            $hmac_key  = $sha_phrase;
 
             if (in_array($hash_algorithm, array( 'sha256', 'sha512' ), true)) {
                 $signature = hash($hash_algorithm, $shaString);
