@@ -42,6 +42,7 @@
 				<img src="{$module_dir|escape:'htmlall':'UTF-8'}/views/img/mastercard-logo.png" alt="{l s='mastercard' mod='amazonpaymentservices'}" class="card-mastercard card-icon" />
 				<img src="{$module_dir|escape:'htmlall':'UTF-8'}/views/img/amex-logo.png" alt="{l s='amex' mod='amazonpaymentservices'}" class="card-amex card-icon" />
 				<img src="{$module_dir|escape:'htmlall':'UTF-8'}/views/img/meeza-logo.jpg" alt="{l s='meeza' mod='amazonpaymentservices'}" class="card-meeza card-icon" />
+				<img src="{$module_dir|escape:'htmlall':'UTF-8'}/views/img/jaywan-logo.png" alt="{l s='jaywan' mod='amazonpaymentservices'}" class="card-jaywan card-icon" />
 
 				<label class="aps_error aps_card_error"></label>
 			</div>
