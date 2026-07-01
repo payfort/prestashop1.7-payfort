@@ -271,6 +271,9 @@ var APSValidation  = (function () {
                 // American Express
                 var amex_regex = new RegExp( '^3$|^3[47][0-9]{0,13}$' );
                 
+                // Jaywan
+                var jaywan_regex = new RegExp( jaywan_bins, 'm' );
+                
                 //mada
                 var mada_regex = new RegExp( '/^' + mada_bins + '/', 'm' );
                 var mada_regex = new RegExp( mada_bins, 'm' );
@@ -278,7 +281,10 @@ var APSValidation  = (function () {
                 //meeza
                 var meeza_regex = new RegExp( meeza_bins, 'gm' );
                 
-                if ( card_number.match( mada_regex ) ) {
+                if ( card_number.match( jaywan_regex ) ) {
+                    card_type   = 'jaywan';
+                    card_length = 16;
+                } else if ( card_number.match( mada_regex ) ) {
                     //todo check recurring condition required
                     if (0 && has_recurring_products != '0') {
                         card_validity = false;

@@ -61,6 +61,7 @@ If you don't have an APS account click here to sign up for Amazon Payment Servic
    * valU
    * mada
    * Meeza
+   * Jaywan
    * KNET
    * NAPS
    * Apple Pay
@@ -70,7 +71,11 @@ If you don't have an APS account click here to sign up for Amazon Payment Servic
 
 | Plugin Version | Release Notes                                                                                                                                                                                                                                                                                                                                                                                                                            |
 |:--------------:|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+
+|     2.2.7      | * New - Jaywan card brand support added to credit/debit cards checkout <br/> * New - Jaywan BIN detection in client-side credit card validation <br/> * New - Jaywan support for installments payment option <br/> * New - Jaywan configurable options in admin settings <br/> * New - Jaywan branded card images (EN/AR)                                                                     |
+
 |     2.2.6      | * ApplePay signature calculation enhancements                                                                                                                                                                                                                                                                                                                                                                                            |
+
 |     2.2.5      | * Supportive endpoints require users to login                                                                                                                                                                                                                                                                                                                                                                                            |
 |     2.2.4      | * Signature calculation Fix                                                                                                                                                                                                                                                                                                                                                                                                              |
 |     2.2.3      | * ApplePay Guest Checkout require user to login                                                                                                                                                                                                                                                                                                                                                                                          |

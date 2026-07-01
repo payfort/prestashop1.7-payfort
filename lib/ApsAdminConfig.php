@@ -48,8 +48,10 @@ class ApsAdminConfig extends Module
         'cc_integration_type' => 'AMAZONPAYMENTSERVICES_CC_INTEGRATION_TYPE',
         'cc_show_mada_branding' => 'AMAZONPAYMENTSERVICES_CC_SHOW_MADA_BRANDING',
         'cc_show_meeza_branding' => 'AMAZONPAYMENTSERVICES_CC_SHOW_MEEZA_BRANDING',
+        'cc_show_jaywan_branding' => 'AMAZONPAYMENTSERVICES_CC_SHOW_JAYWAN_BRANDING',
         'cc_mada_bins' => 'AMAZONPAYMENTSERVICES_CC_MADA_BINS',
         'cc_meeza_bins' => 'AMAZONPAYMENTSERVICES_CC_MEEZA_BINS',
+        'cc_jaywan_bins' => 'AMAZONPAYMENTSERVICES_CC_JAYWAN_BINS',
         'tokenization' => 'AMAZONPAYMENTSERVICES_TOKENIZATION',
         'hide_delete_token' => 'AMAZONPAYMENTSERVICES_HIDE_DELETE_TOKEN',
         'cc_sort_order' => 'AMAZONPAYMENTSERVICES_CC_SORT_ORDER',
@@ -121,6 +123,10 @@ class ApsAdminConfig extends Module
 
             if ('cc_meeza_bins' == $key && empty($configValues[$key])) {
                 $configValues[$key] = ApsConstant::MEEZA_BINS;
+            }
+
+            if ('cc_jaywan_bins' == $key && empty($configValues[$key])) {
+                $configValues[$key] = ApsConstant::JAYWAN_BINS;
             }
 
             if ('host_to_host_url' == $key && empty($configValues[$key])) {
@@ -578,6 +584,26 @@ class ApsAdminConfig extends Module
                         'type' => 'textarea',
                         'name' => 'cc_meeza_bins',
                         'label' => $this->l('Meeza Bins'),
+                        'desc' => $this->l('Please do not change any of the below BINs configuration unless it is instructed by Amazon Payment Services Integration team. For further inquiries: integration-ps@amazon.com'),
+                    ),
+                    array(
+                        'type' => 'select',
+                        'label' => $this->l('Show Jaywan Branding'),
+                        'name' => 'cc_show_jaywan_branding',
+                        'options' => array(
+                            'query' => array(
+                                array('id' => 1, 'name' => $this->l('Yes')),
+                                array('id' => 0, 'name' => $this->l('No'))
+                            ),
+                            'id' => 'id',
+                            'name' => 'name',
+                        ),
+                    ),
+                    array(
+                        'col'  => 6,
+                        'type' => 'textarea',
+                        'name' => 'cc_jaywan_bins',
+                        'label' => $this->l('Jaywan Bins'),
                         'desc' => $this->l('Please do not change any of the below BINs configuration unless it is instructed by Amazon Payment Services Integration team. For further inquiries: integration-ps@amazon.com'),
                     ),
                     array(

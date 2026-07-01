@@ -20,8 +20,10 @@ class AmazonpaymentservicesConfig extends AmazonpaymentservicesSuper
     private $cc_integration_type;
     private $cc_show_mada_branding;
     private $cc_show_meeza_branding;
+    private $cc_show_jaywan_branding;
     private $cc_mada_bins;
     private $cc_meeza_bins;
+    private $cc_jaywan_bins;
     private $tokenization;
     private $hide_delete_token;
     private $cc_sort_order;
@@ -87,8 +89,10 @@ class AmazonpaymentservicesConfig extends AmazonpaymentservicesSuper
         'cc_integration_type' => 'AMAZONPAYMENTSERVICES_CC_INTEGRATION_TYPE',
         'cc_show_mada_branding' => 'AMAZONPAYMENTSERVICES_CC_SHOW_MADA_BRANDING',
         'cc_show_meeza_branding' => 'AMAZONPAYMENTSERVICES_CC_SHOW_MEEZA_BRANDING',
+        'cc_show_jaywan_branding' => 'AMAZONPAYMENTSERVICES_CC_SHOW_JAYWAN_BRANDING',
         'cc_mada_bins' => 'AMAZONPAYMENTSERVICES_CC_MADA_BINS',
         'cc_meeza_bins' => 'AMAZONPAYMENTSERVICES_CC_MEEZA_BINS',
+        'cc_jaywan_bins' => 'AMAZONPAYMENTSERVICES_CC_JAYWAN_BINS',
         'tokenization' => 'AMAZONPAYMENTSERVICES_TOKENIZATION',
         'hide_delete_token' => 'AMAZONPAYMENTSERVICES_HIDE_DELETE_TOKEN',
         'cc_sort_order' => 'AMAZONPAYMENTSERVICES_CC_SORT_ORDER',
@@ -709,6 +713,19 @@ class AmazonpaymentservicesConfig extends AmazonpaymentservicesSuper
     public function getMeezaBins()
     {
         return $this->cc_meeza_bins;
+    }
+
+    public function getJaywanBins()
+    {
+        return $this->cc_jaywan_bins;
+    }
+
+    public function isJaywanBranding()
+    {
+        if ($this->cc_show_jaywan_branding) {
+            return true;
+        }
+        return false;
     }
 
     public function getCheckStatusCronDuration()

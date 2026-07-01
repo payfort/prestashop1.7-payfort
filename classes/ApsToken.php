@@ -237,7 +237,7 @@ class ApsToken extends ObjectModel
         $card_bin = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
 
         if ($card_bin) {
-            $card_bin = Tools::substr($card_bin, 0, 6);
+            $card_bin = Tools::substr($card_bin, 0, 8);
         }
         return $card_bin;
     }

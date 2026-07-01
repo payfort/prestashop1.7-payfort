@@ -405,6 +405,7 @@ class Amazonpaymentservices extends PaymentModule
             'aps_js_messages' => $this->apsJsErrorMessages(),
             'mada_bins'  => Configuration::get('AMAZONPAYMENTSERVICES_CC_MADA_BINS'),
             'meeza_bins' => Configuration::get('AMAZONPAYMENTSERVICES_CC_MEEZA_BINS'),
+            'jaywan_bins' => Configuration::get('AMAZONPAYMENTSERVICES_CC_JAYWAN_BINS'),
             'is_embedded_hosted_checkout' => $is_embedded_hosted_checkout
         ]);
     }
@@ -701,12 +702,20 @@ class Amazonpaymentservices extends PaymentModule
             $title = $this->l('mada debit card / Credit Cards');
         }
         $logo = 'cc_';
-        if ($aps_config->isMadaBranding() && $aps_config->isMeezaBranding()) {
+        if ($aps_config->isMadaBranding() && $aps_config->isMeezaBranding() && $aps_config->isJaywanBranding()) {
+            $logo = 'cc_with_all_brand_';
+        } elseif ($aps_config->isMadaBranding() && $aps_config->isMeezaBranding()) {
             $logo = 'cc_with_brand_';
+        } elseif ($aps_config->isMadaBranding() && $aps_config->isJaywanBranding()) {
+            $logo = 'cc_with_mada_jaywan_';
+        } elseif ($aps_config->isMeezaBranding() && $aps_config->isJaywanBranding()) {
+            $logo = 'cc_with_meeza_jaywan_';
         } elseif ($aps_config->isMadaBranding()) {
             $logo = 'cc_with_mada_';
         } elseif ($aps_config->isMeezaBranding()) {
             $logo = 'cc_with_meeza_';
+        } elseif ($aps_config->isJaywanBranding()) {
+            $logo = 'cc_with_jaywan_';
         }
         $language = $aps_config->getLanguage();
         $logo .= $language.'.png';
@@ -757,6 +766,9 @@ class Amazonpaymentservices extends PaymentModule
         $aps_config = AmazonpaymentservicesConfig::getInstance();
         $language = $aps_config->getLanguage();
         $logo = 'installment_'.$language.'.png';
+        if ($aps_config->isJaywanBranding()) {
+            $logo = 'installment_with_jaywan_'.$language.'.png';
+        }
         $logo_path = Media::getMediaPath(_PS_MODULE_DIR_.$this->name.'/views/img/'.$logo);
 
         if (version_compare(_PS_VERSION_, '1.7', '>=')) {
