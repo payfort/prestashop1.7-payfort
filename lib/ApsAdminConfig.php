@@ -27,6 +27,14 @@
 class ApsAdminConfig extends Module
 {
     /**
+     * Returns the secure directory path for Apple Pay certificate storage (outside document root).
+     */
+    public static function getApplePayCertificateDir()
+    {
+        return _PS_CONFIG_DIR_ . 'aps_certificate/';
+    }
+
+    /**
      * Array of keys contain origin Db keys
      *
      * @var array config fields
@@ -195,34 +203,41 @@ class ApsAdminConfig extends Module
             }
 
             /*
-                upload certiticate
+                upload certificate - stored outside document root for security
             */
-            if (!file_exists(_PS_UPLOAD_DIR_ . 'aps_certificate')) {
-                // Apparently sometimes mkdir cannot set the rights, and sometimes chmod can't. Trying both.
-                $success = @mkdir(_PS_UPLOAD_DIR_ . 'aps_certificate', 0775, true);
-                $chmod = @chmod(_PS_UPLOAD_DIR_ . 'aps_certificate', 0775);
-
-                // Create an index.php file in the new folder
-                if (($success || $chmod)
-                    && !file_exists(_PS_UPLOAD_DIR_ . 'aps_certificate/' . 'index.php')
-                    && file_exists(_PS_UPLOAD_DIR_ . 'index.php')) {
-                    copy(_PS_UPLOAD_DIR_ . 'index.php', _PS_UPLOAD_DIR_ . 'aps_certificate/' . 'index.php');
-                }
+            $cert_dir = self::getApplePayCertificateDir();
+            if (!file_exists($cert_dir)) {
+                @mkdir($cert_dir, 0750, true);
+                @chmod($cert_dir, 0750);
             }
 
             if (isset($_FILES['apple_pay_certificate_crt_file'])) {
                 if (is_uploaded_file($_FILES['apple_pay_certificate_crt_file']['tmp_name'])) {
-                    copy($_FILES['apple_pay_certificate_crt_file']['tmp_name'], _PS_UPLOAD_DIR_ . 'aps_certificate/identifier.crt.pem');
-                     @unlink($_FILES['apple_pay_certificate_crt_file']['tmp_name']);
-                     Configuration::updateValue('AMAZONPAYMENTSERVICES_APPLE_PAY_CRT_FILE', 'identifier.crt.pem');
+                    $crt_filename = bin2hex(random_bytes(16)) . '.crt.pem';
+                    copy($_FILES['apple_pay_certificate_crt_file']['tmp_name'], $cert_dir . $crt_filename);
+                    @chmod($cert_dir . $crt_filename, 0640);
+                    @unlink($_FILES['apple_pay_certificate_crt_file']['tmp_name']);
+                    // Remove old certificate file if it exists
+                    $old_crt = Configuration::get('AMAZONPAYMENTSERVICES_APPLE_PAY_CRT_FILE', null);
+                    if ($old_crt && file_exists($cert_dir . $old_crt)) {
+                        @unlink($cert_dir . $old_crt);
+                    }
+                    Configuration::updateValue('AMAZONPAYMENTSERVICES_APPLE_PAY_CRT_FILE', $crt_filename);
                 }
             }
 
             if (isset($_FILES['apple_pay_certificate_key_file'])) {
                 if (is_uploaded_file($_FILES['apple_pay_certificate_key_file']['tmp_name'])) {
-                    copy($_FILES['apple_pay_certificate_key_file']['tmp_name'], _PS_UPLOAD_DIR_ . 'aps_certificate/identifier.key.pem');
-                     @unlink($_FILES['apple_pay_certificate_key_file']['tmp_name']);
-                    Configuration::updateValue('AMAZONPAYMENTSERVICES_APPLE_PAY_KEY_FILE', 'identifier.key.pem');
+                    $key_filename = bin2hex(random_bytes(16)) . '.key.pem';
+                    copy($_FILES['apple_pay_certificate_key_file']['tmp_name'], $cert_dir . $key_filename);
+                    @chmod($cert_dir . $key_filename, 0640);
+                    @unlink($_FILES['apple_pay_certificate_key_file']['tmp_name']);
+                    // Remove old key file if it exists
+                    $old_key = Configuration::get('AMAZONPAYMENTSERVICES_APPLE_PAY_KEY_FILE', null);
+                    if ($old_key && file_exists($cert_dir . $old_key)) {
+                        @unlink($cert_dir . $old_key);
+                    }
+                    Configuration::updateValue('AMAZONPAYMENTSERVICES_APPLE_PAY_KEY_FILE', $key_filename);
                 }
             }
 
@@ -988,15 +1003,16 @@ class ApsAdminConfig extends Module
      */
     protected function getAdminApplePayConfigForms()
     {
+        $cert_dir = self::getApplePayCertificateDir();
         $key_file_name = Configuration::get('AMAZONPAYMENTSERVICES_APPLE_PAY_KEY_FILE', null);
         $key_file_path = '';
         if ($key_file_name) {
-            $key_file_path = _PS_UPLOAD_DIR_ . 'aps_certificate/' . $key_file_name;
+            $key_file_path = $cert_dir . $key_file_name;
         }
         $crt_file_name = Configuration::get('AMAZONPAYMENTSERVICES_APPLE_PAY_CRT_FILE', null);
         $crt_file_path = '';
         if ($crt_file_name) {
-            $crt_file_path = _PS_UPLOAD_DIR_ . 'aps_certificate/' . $crt_file_name;
+            $crt_file_path = $cert_dir . $crt_file_name;
         }
         return array(
             'form' =>

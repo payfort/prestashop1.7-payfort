@@ -44,7 +44,7 @@ class Amazonpaymentservices extends PaymentModule
     {
         $this->name = 'amazonpaymentservices';
         $this->tab = 'payments_gateways';
-        $this->version = '2.2.3';
+        $this->version = '2.2.8';
         $this->author = 'Amazon Payment Services';
         $this->need_instance = 1;
         $this->currencies = true;
@@ -1138,7 +1138,7 @@ class Amazonpaymentservices extends PaymentModule
 
     public function setAppleVariables($payment_method, $integration_type, $payment_title = '')
     {
-        $certificate_path              = _PS_UPLOAD_DIR_ . 'aps_certificate/' . Configuration::get('AMAZONPAYMENTSERVICES_APPLE_PAY_CRT_FILE', null);
+        $certificate_path              = ApsAdminConfig::getApplePayCertificateDir() . Configuration::get('AMAZONPAYMENTSERVICES_APPLE_PAY_CRT_FILE', null);
         $apple_pay_merchant_identifier = openssl_x509_parse(Tools::file_get_contents($certificate_path))['subject']['UID'];
 
 
