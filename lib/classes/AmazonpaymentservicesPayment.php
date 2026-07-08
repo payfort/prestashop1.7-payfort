@@ -1363,9 +1363,10 @@ class AmazonpaymentservicesPayment extends AmazonpaymentservicesSuper
         $apple_pay_display_name        = $this->aps_config->getApplePayDisplayName();
         $production_key                = $this->aps_config->getApplePayProductionKey();
 
-        $certificate_path              = _PS_UPLOAD_DIR_ . 'aps_certificate/' . $this->aps_config->getApplePayCertificateFileName();
+        $cert_dir                      = ApsAdminConfig::getApplePayCertificateDir();
+        $certificate_path              = $cert_dir . $this->aps_config->getApplePayCertificateFileName();
         $apple_pay_merchant_identifier = openssl_x509_parse(Tools::file_get_contents($certificate_path))['subject']['UID'];
-        $certificate_key               = _PS_UPLOAD_DIR_ . 'aps_certificate/' . $this->aps_config->getApplePayCertificateKeyFileName();
+        $certificate_key               = $cert_dir . $this->aps_config->getApplePayCertificateKeyFileName();
         $data                          = '{"merchantIdentifier":"' . $apple_pay_merchant_identifier . '", "domainName":"' . $domain_name . '", "displayName":"' . $apple_pay_display_name . '"}';
         $this->aps_helper->log('Init apple_url' . $apple_url . 'certificate_path' . $certificate_path);
         curl_setopt($ch, CURLOPT_URL, $apple_url);
